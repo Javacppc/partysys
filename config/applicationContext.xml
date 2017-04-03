@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<!-- 属性占位符配置器加载数据库配置文件，供${}引用 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<!-- 本系统使用c3p0数据源连接池 -->
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close"
+		p:driverClass="${jdbc.driverClass}"
+		p:jdbcUrl="${jdbc.jdbcUrl}"
+		p:user="${jdbc.user}"
+		p:password="${jdbc.password}"
+		p:initialPoolSize="${jdbc.initialPoolSize}"
+		p:maxPoolSize="${jdbc.maxPoolSize}"
+		p:minPoolSize="3"
+		p:acquireIncrement="3"
+		p:maxIdleTime="1800"
+	/>
+	<!-- 简化开发，不用在每次些DAO的时候都注入sessionFactory -->
+	 <bean id="daoTemplate" 
+	abstract="true" 
+	p:sessionFactory-ref="sessionFactory"/>
+	<!-- 配置Hibernate SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSource">
+		<property name="annotatedClasses">
+			<list>	
+				<value>com.partysys.test.entity.Person</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<!-- 記住不能加上如下的語句 -->
+				<!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
+			</props>
+		</property>
+	</bean>
+	<!-- 配置Hibernate事务 -->
+	<bean id="transactionManager" 
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory"/>
+	<!-- 配置声明式事务管理，事务通知 -->
+	<tx:advice transaction-manager="transactionManager" id="txAdvice">
+		<tx:attributes>
+			<tx:method  name="find*" read-only="true"/>
+			<tx:method  name="get*" read-only="true"/>
+			<tx:method  name="list*" read-only="true"/>
+			<tx:method  name="*" rollback-for="java.lang.Throwable" propagation="REQUIRED" isolation="DEFAULT"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- 配置被事务控制的类 -->
+	<aop:config>
+		<!-- 凡是以Service结尾的类都会被扫描到 （即事务控制Service层的类，当然要符合命名规则）-->
+		<aop:pointcut expression="bean(*Service)" id="serviceOperations"/>
+		<!-- <aop:pointcut expression="execution(* com.partysys..service.impl.*.*(..))" id="serviceOperations"/> -->
+		<!-- 指定在serviceOperations切入点应用txAdvice事务增强处理 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperations"/>
+	</aop:config>
+	<!-- 引入外部Spring配置文件 -->
+	<import resource="classpath:com/partysys/*/conf/*-spring.xml"/>
+	<!-- 引入系统管理模块的所有spring配置文件 -->
+	<!-- <import resource="classpath:com/partysys/sysmanage/*/conf/*-spring.xml"/> -->
+</beans>
