@@ -18,29 +18,28 @@ import com.partysys.sysmanage.role.entity.Role;
  */
 @Entity
 @Table(name = "rolepartymember", catalog = "partysys")
-
+/**
+ * 党员角色表
+ * @author zhuxiaodong
+ *
+ */
 public class Rolepartymember implements java.io.Serializable {
 
-	// Fields
 
 	private RolepartymemberId id;
 	private Partymember partymember;
 	private Role role;
 
-	// Constructors
 
-	/** default constructor */
 	public Rolepartymember() {
 	}
 
-	/** full constructor */
 	public Rolepartymember(RolepartymemberId id, Partymember partymember, Role role) {
 		this.id = id;
 		this.partymember = partymember;
 		this.role = role;
 	}
 
-	// Property accessors
 	@EmbeddedId
 
 	@AttributeOverrides({

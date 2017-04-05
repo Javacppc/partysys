@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
 import com.partysys.core.dao.BaseDao;
+import com.partysys.core.page.PageResult;
 import com.partysys.core.util.QueryHelper;
 /**
  * 基础DAO类的实现类
@@ -174,6 +175,32 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 			}
 		}
 		return query.list();
+	}
+	
+	@Override
+	public PageResult findByPage(QueryHelper helper, int pageNo, int pageSize) {
+		Query query = getSessionFactory().getCurrentSession()
+				.createQuery(helper.getQueryListHql());
+		List<Object> objs = helper.getParameters();
+		if (objs != null) {
+			for (int i = 0; i < objs.size(); ++i) {
+				query.setParameter(i, objs.get(i));
+			}
+		}
+		//大部分情况下都不会传入pageNo的值所以对于这种情况初始为1
+		if (pageNo < 1) pageNo = 1;
+		query.setFirstResult((pageNo - 1) * pageSize);
+		query.setMaxResults(pageSize);
+		List items = query.list();//分页后的查询结果
+		Query queryCount = getSessionFactory().getCurrentSession()
+				.createQuery(helper.getQueryCountHql());//获取总记录数
+		if (objs != null) {
+			for (int i = 0; i < objs.size(); ++i) {
+				queryCount.setParameter(i, objs.get(i));
+			}
+		}
+		long totalCount = (long) queryCount.uniqueResult();
+		return new PageResult(totalCount,pageNo, pageSize, items);
 	}
 	
 }

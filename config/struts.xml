@@ -7,8 +7,25 @@
     <constant name="struts.ui.theme" value="simple" />
 	<constant name="struts.action.extension" value="action" />
 	
+	<package name="base-default" extends="struts-default">
+		<!-- 定义返回结果类型 -->
+		<result-types>
+			<result-type name="error" class="com.partysys.core.action.SysResultAction"></result-type>
+		</result-types>
+		<global-results>
+			<result name="error" type="error">/WEB-INF/jsp/error.jsp</result>
+			<result name="sysError">/WEB-INF/jsp/error.jsp</result>
+			<result name="input">/WEB-INF/jsp/error.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="sysError" exception="com.partysys.core.exception.SysException" />
+			<exception-mapping result="input" exception="java.lang.Exception"/>
+		</global-exception-mappings>
+	</package>
 	
 	<!-- 导入测试模块的 test-struts.xml -->
 	<include file="com/partysys/test/conf/test-struts.xml" />
+	<!-- 导入系统管理模块的角色管理子模块的role-struts.xml -->
+	<include file="com/partysys/sysmanage/role/conf/role-struts.xml" />
 	
 </struts>

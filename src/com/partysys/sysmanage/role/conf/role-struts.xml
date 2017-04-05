@@ -6,13 +6,14 @@
 <struts>
 
     <package name="role-action" extends="base-default" namespace="/sysmanage">
-    	<action name="role_*" class="com.partysys.sysmanage.role.action.RoleAction" method="{1}">
+    	<action name="role_*" class="roleAction" method="{1}">
     		<result name="{1}">/WEB-INF/jsp/sysmanage/role/{1}.jsp</result>
+    		<!-- 在增加（编辑，删除）完角色之后保存会重定向到显示页面-->
     		<result name="list" type="redirectAction">
     			<param name="actionName">role_listUI</param>
-    			<!-- <param name="role.title">${strTitle}</param>
+    			<param name="role.roleName">${strTitle}</param>
     			<param name="encode">true</param>
-    			<param name="pageNo">${pageNo}</param> -->
+    			<param name="pageNo">${pageNo}</param>
     		</result>		
     	</action>
     </package>

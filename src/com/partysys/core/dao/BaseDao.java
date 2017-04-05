@@ -3,6 +3,7 @@ package com.partysys.core.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import com.partysys.core.page.PageResult;
 import com.partysys.core.util.QueryHelper;
 
 /**
@@ -64,23 +65,34 @@ public interface BaseDao<T>
 	 * @return
 	 */
 	List<T> find(QueryHelper helper);
+	
 	/**
-	 * 分页查询
+	 * 分页查询的推荐做法
+	 * @param helper
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	public PageResult findByPage(QueryHelper helper, int pageNo, int pageSize);
+	/**
+	 * 分页查询(推荐使用带QueryHelper参数的分页查询)
 	 * @param hql
 	 * @param pageNo
 	 * @param pageSize
 	 * @return
 	 */
+	@Deprecated
 	List<T> findByPage(String hql,
 			 int pageNo, int pageSize);
 	/**
-	 * 分页查询
+	 * 分页查询(推荐使用带有QuertHelper参数的分页插查询)
 	 * @param hql
 	 * @param pageNo
 	 * @param pageSize
 	 * @param params
 	 * @return
 	 */
+	@Deprecated
 	public List<T> findByPage(String hql , int pageNo, int pageSize
 			, Object... params);
 }

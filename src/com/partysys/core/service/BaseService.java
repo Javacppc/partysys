@@ -3,6 +3,7 @@ package com.partysys.core.service;
 import java.io.Serializable;
 import java.util.List;
 
+import com.partysys.core.page.PageResult;
 import com.partysys.core.util.QueryHelper;
 /**
  * 基础的业务逻辑类
@@ -60,21 +61,31 @@ public interface BaseService<T> {
 	 */
 	List<T> find(QueryHelper helper);
 	/**
-	 * 分页查询
+	 * 分页查询（推荐使用的做法）
+	 * @param helper
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	public PageResult findByPage(QueryHelper helper, int pageNo, int pageSize);
+	/**
+	 * 分页查询（不推荐使用，推荐使用带QueryHelper参数的分页查询）
 	 * @param hql 指定的hql语句
 	 * @param pageNo 指定要显示第几页？
 	 * @param pageSize 指定每一页有多少个记录
 	 * @param params 指定参数
 	 * @return
 	 */
+	@Deprecated
 	public List<T> findByPage(String hql , int pageNo, int pageSize
 			, Object... params);
 	/**
-	 * 分页查询
+	 * 分页查询（不推荐使用，推荐使用带QueryHelper参数的分页查询）
 	 * @param hql
 	 * @param pageNo
 	 * @param pageSize
 	 * @return
 	 */
+	@Deprecated
 	public List<T> findByPage(String hql , int pageNo, int pageSize);
 }

@@ -31,9 +31,18 @@
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
 		p:dataSource-ref="dataSource">
+		<!-- 配置持久化类 -->
 		<property name="annotatedClasses">
 			<list>	
 				<value>com.partysys.test.entity.Person</value>
+				<value>com.partysys.sysmanage.role.entity.Role</value>
+				<value>com.partysys.sysmanage.role.entity.Roleprivilege</value>
+				<value>com.partysys.sysmanage.info.entity.Info</value>			
+				<value>com.partysys.sysmanage.party.entity.Partymember</value>
+				<value>com.partysys.sysmanage.party.entity.Rolepartymember</value>
+				<value>com.partysys.sysmanage.privilege.entity.Privilege</value>
+				<value>com.partysys.sysmanage.party.entity.RolepartymemberId</value>
+				<value>com.partysys.sysmanage.branch.entity.Branch</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -41,7 +50,7 @@
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<!-- 記住不能加上如下的語句 -->
+				<!-- 记住不能加上如下的语句 -->
 				<!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
 			</props>
 		</property>
@@ -67,8 +76,8 @@
 		<!-- 指定在serviceOperations切入点应用txAdvice事务增强处理 -->
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperations"/>
 	</aop:config>
-	<!-- 引入外部Spring配置文件 -->
+	<!-- 引入外部Spring配置文件(主要是test部分的配置文件) -->
 	<import resource="classpath:com/partysys/*/conf/*-spring.xml"/>
 	<!-- 引入系统管理模块的所有spring配置文件 -->
-	<!-- <import resource="classpath:com/partysys/sysmanage/*/conf/*-spring.xml"/> -->
+	<import resource="classpath:com/partysys/sysmanage/*/conf/*-spring.xml"/>
 </beans>

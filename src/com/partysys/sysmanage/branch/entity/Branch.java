@@ -38,6 +38,7 @@ public class Branch implements java.io.Serializable {
 	/**
 	 * 支部管理员
 	 */
+	
 	private String[] branchAdmin;
 	/**
 	 * 支部人数
@@ -86,7 +87,7 @@ public class Branch implements java.io.Serializable {
 	@ElementCollection(targetClass=String.class)
 	@CollectionTable(name="br_admin",joinColumns=@JoinColumn(name="admin_id", nullable=false))
 	@Column(name = "branch_admin", length = 100)
-	@OrderColumn(name="order")
+	@OrderColumn(name="t_order")
 	public String[] getBranchAdmin() {
 		return this.branchAdmin;
 	}

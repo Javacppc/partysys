@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.partysys.sysmanage.party.entity.Rolepartymember;
@@ -60,7 +63,6 @@ public class Role implements java.io.Serializable {
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
 	@Id
 	@GeneratedValue(generator = "generator")
-
 	@Column(name = "role_id", unique = true, nullable = false, length = 32)
 
 	public String getRoleId() {
@@ -100,9 +102,12 @@ public class Role implements java.io.Serializable {
 	public void setRolepartymembers(Set<Rolepartymember> rolepartymembers) {
 		this.rolepartymembers = rolepartymembers;
 	}
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "role")
-
+	//禁止懒加载，因为在显示角色的同时需要显示权限
+	//@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "role")
+	
+	
+	@OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "role", cascade=CascadeType.ALL)
+	@Fetch(FetchMode.SELECT)
 	public Set<Roleprivilege> getRoleprivileges() {
 		return this.roleprivileges;
 	}
@@ -110,5 +115,4 @@ public class Role implements java.io.Serializable {
 	public void setRoleprivileges(Set<Roleprivilege> roleprivileges) {
 		this.roleprivileges = roleprivileges;
 	}
-
 }

@@ -78,6 +78,10 @@ public class QueryHelper {
 	public List<Object> getParameters() {
 		return parameters;
 	}
+
+	public String getQueryCountHql() {
+		return "SELECT COUNT(*) " + fromClause + whereCluase;
+	}
 	
 	
 }

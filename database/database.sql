@@ -61,14 +61,17 @@ create table partymember
    province             varchar(30),
    telenumber           varchar(20),
    grade                varchar(20),
-   class                varchar(20),
+   pclass                varchar(20),
    cultivate            varchar(20),
    classification       varchar(30),
-   branchId             varchar(20),
+   branchName             varchar(20),
    textnumber           varchar(30),
-   jionTime             date,
-   roleId               varchar(20),
+   joinTime             date,
    remake               varchar(50),
+   headImg				varchr(100),
+   appTime				Date,
+   graTime				Date,
+   dorm 				varchar(10),
    primary key (id)
 );
 
@@ -79,6 +82,7 @@ create table privilege
 (
    privilege_id         varchar(32) not null,
    privilege_name       varchar(40) not null,
+   name                 varchar(20) not null,
    state                varchar(10),
    primary key (privilege_id)
 );
@@ -128,3 +132,19 @@ alter table roleprivilege add constraint FK_roleprivilege foreign key (role_id)
 
 alter table roleprivilege add constraint FK_roleprivilege2 foreign key (privilege_id)
       references privilege (privilege_id) on delete restrict on update restrict;
+/**
+*记录数据库变更的文件
+*Author: 朱可凡
+*Date: 2017_4_4
+*Desc: 在DELL笔记本电脑上为权限表插入如下数据
+*
+*/
+
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('livelihood','民生管理',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('Tmanage','教工党建管理',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('studentmanage','学生党建管理',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('teachersumcash','教工汇总党费',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('studentsumcash','学生汇总党费',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('studentsumcash','支部发布学习资料',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('studentsumcash','党委发布学习资料',"1");
+INSERT INTO privilege(NAME,privilege_name,state) VALUES('info','信息管理',"1");

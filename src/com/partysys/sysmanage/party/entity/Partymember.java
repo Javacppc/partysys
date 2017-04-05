@@ -114,11 +114,11 @@ public class Partymember implements java.io.Serializable {
 	 */
 	private String dorm;
 	/**
-	 * 递交入党申请书事件
+	 * 递交入党申请书事件(年-月)
 	 */
 	private Date appTime;
 	/**
-	 * 党校结业事件
+	 * 党校结业事件（年-月）
 	 */
 	private Date graTime;
 	/**
@@ -209,7 +209,7 @@ public class Partymember implements java.io.Serializable {
 	public void setHeadImg(String headImg) {
 		this.headImg = headImg;
 	}
-
+	@Column(name="appTime", length=15)
 	public Date getAppTime() {
 		return appTime;
 	}
@@ -217,7 +217,7 @@ public class Partymember implements java.io.Serializable {
 	public void setAppTime(Date appTime) {
 		this.appTime = appTime;
 	}
-
+	@Column(name="graTime", length=15)
 	public Date getGraTime() {
 		return graTime;
 	}
@@ -352,7 +352,7 @@ public class Partymember implements java.io.Serializable {
 	//指定保存集合元素的列
 	@Column(name = "cultivate", length = 20)
 	//映射集合元素的索引列
-	@OrderColumn(name="order")
+	@OrderColumn(name="t_order")
 	public String[] getCultivate() {
 		return this.cultivate;
 	}
@@ -371,7 +371,7 @@ public class Partymember implements java.io.Serializable {
 		this.classification = classification;
 	}
 
-	@Column(name = "branchId", length = 20)
+	@Column(name = "branchname", length = 20)
 
 	public String getBranchName() {
 		return this.branchName;

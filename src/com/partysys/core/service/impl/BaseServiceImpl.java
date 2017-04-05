@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.partysys.core.dao.BaseDao;
+import com.partysys.core.page.PageResult;
 import com.partysys.core.service.BaseService;
 import com.partysys.core.util.QueryHelper;
 /**
@@ -46,6 +47,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 
 	@Override
 	public List<T> findAll() {
+		//System.out.println(baseDao == null);
 		return baseDao.findAll();
 	}
 
@@ -72,6 +74,11 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 	@Override
 	public List<T> findByPage(String hql, int pageNo, int pageSize) {
 		return baseDao.findByPage(hql, pageNo, pageSize);
+	}
+
+	@Override
+	public PageResult findByPage(QueryHelper helper, int pageNo, int pageSize) {
+		return baseDao.findByPage(helper, pageNo, pageSize);
 	}
 
 }

@@ -1,11 +1,15 @@
 package com.partysys.sysmanage.info.entity;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -19,6 +23,12 @@ public class Info implements java.io.Serializable {
 
 	
 	private String infoId;
+	
+	/**
+	 * 信息类型
+	 */
+	private String type;
+	
 	/**
 	 * 信息来源
 	 */
@@ -70,7 +80,12 @@ public class Info implements java.io.Serializable {
 	 * 信息分类
 	 */
 	private static final String INFO_TYPE_NEWS = "NEWS";
-
+	public static Map<String, String> INFO_TYPE_MAP = null;
+	static {
+		INFO_TYPE_MAP.put(INFO_TYPE_REPORT, "通知公告");
+		INFO_TYPE_MAP.put(INFO_TYPE_DYNAMIC, "党建工作动态");
+		INFO_TYPE_MAP.put(INFO_TYPE_NEWS, "新闻");
+	}
 	public Info() {
 	}
 
@@ -168,6 +183,14 @@ public class Info implements java.io.Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+	@Column(name="type", length=15)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	
