@@ -21,7 +21,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.partysys.sysmanage.party.entity.Partymember;
 
 /**
- * 支部实体类
+ * 支部实体类(在支部-党员表中充当主表)
  * @author 朱可凡
  */
 @Entity

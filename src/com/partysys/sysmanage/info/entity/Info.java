@@ -82,6 +82,7 @@ public class Info implements java.io.Serializable {
 	private static final String INFO_TYPE_NEWS = "NEWS";
 	public static Map<String, String> INFO_TYPE_MAP = null;
 	static {
+		INFO_TYPE_MAP = new HashMap<>();
 		INFO_TYPE_MAP.put(INFO_TYPE_REPORT, "通知公告");
 		INFO_TYPE_MAP.put(INFO_TYPE_DYNAMIC, "党建工作动态");
 		INFO_TYPE_MAP.put(INFO_TYPE_NEWS, "新闻");

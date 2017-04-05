@@ -27,5 +27,7 @@
 	<include file="com/partysys/test/conf/test-struts.xml" />
 	<!-- 导入系统管理模块的角色管理子模块的role-struts.xml -->
 	<include file="com/partysys/sysmanage/role/conf/role-struts.xml" />
+	<!-- 导入系统管理模块的信息发布管理子模块的info-struts.xml文件 -->
+	<include file="com/partysys/sysmanage/info/conf/info-struts.xml" />
 	
 </struts>

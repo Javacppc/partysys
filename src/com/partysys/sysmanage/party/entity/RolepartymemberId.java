@@ -11,24 +11,19 @@ import javax.persistence.Embeddable;
 
 public class RolepartymemberId implements java.io.Serializable {
 
-	// Fields
 
 	private String id;
 	private String roleId;
 
-	// Constructors
 
-	/** default constructor */
 	public RolepartymemberId() {
 	}
 
-	/** full constructor */
 	public RolepartymemberId(String id, String roleId) {
 		this.id = id;
 		this.roleId = roleId;
 	}
 
-	// Property accessors
 
 	@Column(name = "id", nullable = false, length = 20)
 

@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<!-- 10.176.182.85:8425/itcastTax/ -->
     <%@include file="/common/header.jsp"%>
     <title>信息发布管理</title>
     <script type="text/javascript">
@@ -14,39 +13,39 @@
 	}
   	//新增
   	function doAdd(){
-  		document.forms[0].action = "${basePath}nsfw/info_addUI.action";
+  		document.forms[0].action = "${basePath}sysmanage/info_addUI.action";
   		document.forms[0].submit();
   	}
   	//编辑
   	function doEdit(id){
-  		document.forms[0].action = "${basePath}nsfw/info_editUI.action?info.infoId=" + id;
+  		document.forms[0].action = "${basePath}sysmanage/info_editUI.action?info.infoId=" + id;
   		document.forms[0].submit();
   	}
   	//删除
   	function doDelete(id){
-  		document.forms[0].action = "${basePath}nsfw/info_delete.action?info.infoId=" + id;
+  		document.forms[0].action = "${basePath}sysmanage/info_delete.action?info.infoId=" + id;
   		document.forms[0].submit();
   	}
   	//批量删除
   	function doDeleteAll(){
-  		document.forms[0].action = "${basePath}nsfw/info_deleteSelected.action";
+  		document.forms[0].action = "${basePath}sysmanage/info_deleteSelected.action";
   		document.forms[0].submit();
   	}
-  	var list_url = "${basePath}nsfw/info_listUI.action";
+  	var list_url = "${basePath}sysmanage/info_listUI.action";
   	function doSearch() {
   		//每次点搜索按钮的时候都回到第一页（相当于重新查询）
   		$("#pageNo").val(1);
   		document.forms[0].action = list_url;
   		document.forms[0].submit();
   	}
-  	//異步發佈信息infoId：傳入的信息Id值，state是想要改為的狀態值
+  	//异步发布信息infoId：传入的信息Id值，state是想要改为的状态值
     function doPublic(infoId, state) {
     	$.ajax({
-    		url: "${basePath}nsfw/info/info_publicInfo.action",
+    		url: "${basePath}sysmanage/info/info_publicInfo.action",
     		data: {"info.infoId": infoId, "info.state": state},
     		type: "post",
     		success: function(msg) {
-	    			if ("更新狀態成功" == msg) {
+	    			if ("更新状态成功" == msg) {
 	    				if (state == 1) {
 	    					$("#show_"+infoId).html("发布");
 	    					$("#oper_"+infoId).html('<a href="javascript:doPublic(\''+infoId+'\', 0)">停用</a>');
@@ -55,11 +54,11 @@
 	    					$("#oper_"+infoId).html('<a href="javascript:doPublic(\''+infoId+'\', 1)">发布</a>');
 	    				}
 	    			}else {
-	    				alert('更新信息失敗！');
+	    				alert('更新信息失败！');
 	    			} 
     			},
     		error: function() {
-    			alert('更新信息失敗');
+    			alert('更新信息失败');
     			}
     	});
     }

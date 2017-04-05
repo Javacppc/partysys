@@ -125,8 +125,13 @@ public class Partymember implements java.io.Serializable {
 	 * 用户头像地址（在服务器中的位置）
 	 */
 	private String headImg;
-	
+	/**
+	 * 党员状态（有效？无效？）---无效用户无法登陆
+	 */
 	private String state;
+	/**
+	 * 党员所具有的角色
+	 */
 	private Set<Rolepartymember> rolepartymembers = new HashSet<Rolepartymember>(0);
 	//用户状态
 	/**
@@ -245,7 +250,7 @@ public class Partymember implements java.io.Serializable {
 		this.dorm = dorm;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "branch_id")
 
 	public Branch getBranch() {
