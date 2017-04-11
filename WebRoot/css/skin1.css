@@ -57,9 +57,9 @@ ol,ul,li {
 .content_info .c_crumbs div{ position:relative; height:35px; padding-left:40px;  border-bottom:1px solid #64c864; display:inline-block;}
 .content_info .c_crumbs b{ width:20px; height:20px; display:block; position:absolute; top:8px; left:10px; background:url(../images/sysmanage/e_icon.png) -72px 0px no-repeat;}
 .content_info .c_crumbs .sear{ position:absolute; right:20px; top:6px; width:20px; height:20px; border:0px none; background:url(../images/sysmanage/e_icon.png) 0px -26px no-repeat; cursor:pointer;}
-.content_info .search_art{ padding:5px 10px; height:22px; border-top:1px solid #e3e3e3; border-bottom:1px solid #e3e3e3; background-color:#fafafa; line-height:22px;}
-.content_info .search_art li{ float:left; padding:0px 5px;}
-.content_info .search_art .s_text{ border:1px solid #c7c7c7; height:20px; width:120px;}
+.content_info .search_art{ padding:5px 10px; height:15px; border-top:1px solid #e3e3e3; border-bottom:1px solid #e3e3e3; background-color:#fafafa; line-height:22px;}
+.content_info .search_art li{ float:left; padding:0px 4px;}
+.content_info .search_art .s_text{ border:1px solid #c7c7c7; height:17px; width:120px;}
 .content_info .search_art .s_button{ background:url(../images/sysmanage/e_icon.png) -48px -27px no-repeat; width: 50px; height:24px; border:0px none; color:#fff;}
 .content_info .search_art .s_sele{border:1px solid #c7c7c7; width:120px;}
 
@@ -69,7 +69,7 @@ ol,ul,li {
 .p_d_1_1 .content_info .c_crumbs div{ position:relative; height:35px; padding-left:40px;  border-bottom:2px solid #62adfe; display:inline-block;}
 .p_d_1_1 .content_info .c_crumbs b{ width:20px; height:20px; display:block; position:absolute; top:8px; left:10px; background:url(../images/sysmanage/e_icon.png) -72px 0px no-repeat;}
 .p_d_1_1 .content_info .c_crumbs .sear{ position:absolute; right:20px; top:6px; width:20px; height:20px; border:0px none; background:url(../images/sysmanage/e_icon.png) 0px -26px no-repeat; cursor:pointer;}
-.p_d_1_1 .content_info .search_art{ padding:5px 10px; height:22px; border:1px solid #dbeafa; margin:5px 0px 10px 0px; background-color:#f0f7fe; line-height:22px;}
+.p_d_1_1 .content_info .search_art{ padding:5px 5px; height:19px; border:1px solid #dbeafa; margin:5px 0px 10px 0px; background-color:#f0f7fe; line-height:19px;}
 .p_d_1_1 .content_info .search_art li{ float:left; padding:0px 5px;}
 .p_d_1_1 .content_info .search_art .s_text{ border:1px solid #c7c7c7; height:20px; width:120px;}
 .p_d_1_1 .content_info .search_art .s_button{cursor:pointer; background:url(../images/sysmanage/e_icon.png) -48px -27px no-repeat; width: 50px; height:24px; border:0px none; color:#fff;}

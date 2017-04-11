@@ -9,7 +9,7 @@
 	
 	<package name="base-default" extends="struts-default">
 		<!-- 定义返回结果类型 -->
-		<result-types>
+		<!-- <result-types>
 			<result-type name="error" class="com.partysys.core.action.SysResultAction"></result-type>
 		</result-types>
 		<global-results>
@@ -20,7 +20,7 @@
 		<global-exception-mappings>
 			<exception-mapping result="sysError" exception="com.partysys.core.exception.SysException" />
 			<exception-mapping result="input" exception="java.lang.Exception"/>
-		</global-exception-mappings>
+		</global-exception-mappings> -->
 	</package>
 	
 	<!-- 导入测试模块的 test-struts.xml -->
@@ -29,5 +29,8 @@
 	<include file="com/partysys/sysmanage/role/conf/role-struts.xml" />
 	<!-- 导入系统管理模块的信息发布管理子模块的info-struts.xml文件 -->
 	<include file="com/partysys/sysmanage/info/conf/info-struts.xml" />
-	
+	<!-- 导入系统管理模块的支部管理子模块的branch-struts.xml文件 -->
+	<include file="com/partysys/sysmanage/branch/conf/branch-struts.xml" />
+	<!-- 导入系统管理模块的党员管理子模块的partymember-struts.xml文件 -->
+	<include file="com/partysys/sysmanage/party/conf/partymember-struts.xml" />
 </struts>

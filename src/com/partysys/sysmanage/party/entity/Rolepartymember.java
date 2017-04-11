@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -20,7 +21,7 @@ import com.partysys.sysmanage.role.entity.Role;
 @Table(name = "rolepartymember", catalog = "partysys")
 /**
  * 党员角色表
- * @author zhuxiaodong
+ * @author 朱可凡
  *
  */
 public class Rolepartymember implements java.io.Serializable {
@@ -34,16 +35,20 @@ public class Rolepartymember implements java.io.Serializable {
 	public Rolepartymember() {
 	}
 
+	public Rolepartymember(/*RolepartymemberId id, */Partymember partymember, Role role) {
+		/*this.id = id;*/
+		this.partymember = partymember;
+		this.role = role;
+	}
 	public Rolepartymember(RolepartymemberId id, Partymember partymember, Role role) {
 		this.id = id;
 		this.partymember = partymember;
 		this.role = role;
 	}
-
 	@EmbeddedId
 
 	@AttributeOverrides({
-			@AttributeOverride(name = "id", column = @Column(name = "id", nullable = false, length = 20) ),
+			@AttributeOverride(name = "userId", column = @Column(name = "id", nullable = false, length = 32) ),
 			@AttributeOverride(name = "roleId", column = @Column(name = "role_id", nullable = false, length = 32) ) })
 
 	public RolepartymemberId getId() {
@@ -54,9 +59,8 @@ public class Rolepartymember implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false)
-
 	public Partymember getPartymember() {
 		return this.partymember;
 	}
@@ -65,15 +69,14 @@ public class Rolepartymember implements java.io.Serializable {
 		this.partymember = partymember;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "role_id", nullable = false, insertable = false, updatable = false)
-
 	public Role getRole() {
 		return this.role;
 	}
 
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
+	}	
+	
 }

@@ -1,6 +1,7 @@
 package com.partysys.sysmanage.branch.entity;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -34,28 +35,29 @@ public class Branch implements java.io.Serializable {
 	/**
 	 * 支部名称
 	 */
-	private String brachName;
+	private String branchName;
 	/**
 	 * 支部管理员
 	 */
-	
-	private String[] branchAdmin;
+	private List<String> branchAdmin;
 	/**
 	 * 支部人数
 	 */
 	private Integer branchNumber;
 	private Set<Partymember> partymembers = new HashSet<Partymember>(0);
-
+	
 
 	public Branch() {
 	}
 
-	public Branch(String brachName) {
-		this.brachName = brachName;
+	public Branch(String branchId, String branchName) {
+		this.branchId = branchId;
+		this.branchName = branchName;
 	}
+	
 
-	public Branch(String brachName, String[] branchAdmin, Integer branchNumber, Set<Partymember> partymembers) {
-		this.brachName = brachName;
+	public Branch(String brachName, List<String> branchAdmin, Integer branchNumber, Set<Partymember> partymembers) {
+		this.branchName = brachName;
 		this.branchAdmin = branchAdmin;
 		this.branchNumber = branchNumber;
 		this.partymembers = partymembers;
@@ -75,24 +77,24 @@ public class Branch implements java.io.Serializable {
 		this.branchId = branchId;
 	}
 
-	@Column(name = "brach_name", nullable = false, length = 40)
+	@Column(name = "branch_name", nullable = false, length = 40)
 
-	public String getBrachName() {
-		return this.brachName;
+	public String getBranchName() {
+		return this.branchName;
 	}
 
-	public void setBrachName(String brachName) {
-		this.brachName = brachName;
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
 	}
-	@ElementCollection(targetClass=String.class)
+	@ElementCollection(targetClass=String.class,fetch=FetchType.EAGER)
 	@CollectionTable(name="br_admin",joinColumns=@JoinColumn(name="admin_id", nullable=false))
 	@Column(name = "branch_admin", length = 100)
 	@OrderColumn(name="t_order")
-	public String[] getBranchAdmin() {
+	public List<String> getBranchAdmin() {
 		return this.branchAdmin;
 	}
 
-	public void setBranchAdmin(String[] branchAdmin) {
+	public void setBranchAdmin(List<String> branchAdmin) {
 		this.branchAdmin = branchAdmin;
 	}
 
@@ -106,8 +108,7 @@ public class Branch implements java.io.Serializable {
 		this.branchNumber = branchNumber;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "branch")
-
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "branch",cascade=CascadeType.ALL)
 	public Set<Partymember> getPartymembers() {
 		return this.partymembers;
 	}
@@ -115,5 +116,4 @@ public class Branch implements java.io.Serializable {
 	public void setPartymembers(Set<Partymember> partymembers) {
 		this.partymembers = partymembers;
 	}
-
 }

@@ -41,8 +41,8 @@
 				<value>com.partysys.sysmanage.party.entity.Partymember</value>
 				<value>com.partysys.sysmanage.party.entity.Rolepartymember</value>
 				<value>com.partysys.sysmanage.privilege.entity.Privilege</value>
-				<value>com.partysys.sysmanage.party.entity.RolepartymemberId</value>
 				<value>com.partysys.sysmanage.branch.entity.Branch</value>
+				<value>com.partysys.sysmanage.party.entity.RolepartymemberId</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

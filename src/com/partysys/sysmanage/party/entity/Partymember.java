@@ -150,6 +150,11 @@ public class Partymember implements java.io.Serializable {
 	
 	public Partymember() {
 	}
+	
+	public Partymember(String id) {
+		super();
+		this.id = id;
+	}
 
 	public Partymember(Branch branch, String name, boolean gender, String number, String nation, String identity,
 			String province, String telenumber, String grade, String class_, String[] cultivate, String classification,
@@ -419,8 +424,7 @@ public class Partymember implements java.io.Serializable {
 		this.remake = remake;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "partymember")
-
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "partymember")
 	public Set<Rolepartymember> getRolepartymembers() {
 		return this.rolepartymembers;
 	}

@@ -6,13 +6,16 @@
 <struts>
 
     <package name="partymember-action" extends="base-default" namespace="/sysmanage">
-    	<action name="partymember_*" class="com.partysys.sysmanage.party.action.PartymemberAction" method="{1}">
+    	<action name="partymember_*" class="partymemberAction" method="{1}">
+    		<param name="savePath">/upload/partymember</param>
     		<result name="{1}">/WEB-INF/jsp/sysmanage/partymember/{1}.jsp</result>
     		<result name="list" type="redirectAction">
     			<param name="actionName">partymember_listUI</param>
-    			<!-- <param name="partymember.title">${strTitle}</param>
+    			<param name="partymember.name">${strName}</param>
+    			<param name="partymember.number">${strNumber}</param>
+    			<param name="partymember.grade">${strGrade}</param>
     			<param name="encode">true</param>
-    			<param name="pageNo">${pageNo}</param> -->
+    			<param name="pageNo">${pageNo}</param>
     		</result>		
     	</action>
     </package>
