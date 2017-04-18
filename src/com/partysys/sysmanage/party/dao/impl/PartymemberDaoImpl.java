@@ -1,5 +1,6 @@
 package com.partysys.sysmanage.party.dao.impl;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,4 +41,25 @@ public class PartymemberDaoImpl extends BaseDaoImpl<Partymember> implements Part
 		return query.list();
 	}
 
+	@Override
+	public String findBranchIdByUserId(String id) {
+		Query query = getSessionFactory().getCurrentSession().createQuery("SELECT p.branch.branchId FROM Partymember p WHERE p.id=?");
+		query.setParameter(0, id);
+		return (String) query.uniqueResult();
+	}
+
+	@Override
+	public void deleteUserRoleByUserId(Serializable id) {
+		Query query = getSessionFactory().getCurrentSession().createQuery("DELETE FROM Rolepartymember p WHERE p.id.userId=?");
+		query.setParameter(0, id);
+		query.executeUpdate();
+	}
+
+	@Override
+	public List<Partymember> findUserByNumberAndPass(String number, String password) {
+		Query query = getSessionFactory().getCurrentSession().createQuery("FROM Partymember p WHERE p.number = ? AND p.password = ?");
+		query.setParameter(0, number);
+		query.setParameter(1, password);
+		return query.list();
+	}
 }

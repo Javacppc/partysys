@@ -4,11 +4,11 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-
-    <package name="sysmanageHome-action" extends="base-default" namespace="/sysmanage">
+    <package name="sysmanageHome-action" extends="sysmanage-default" namespace="/sysmanage">
     	<action name="home_*" class="com.partysys.sysmanage.home.action.HomeAction" method="{1}">
-    		<result name="{1}">/WEB-INF/jsp/sysmanage/home/{1}.jsp</result>
-    			
+    		<result name="{1}">/WEB-INF/jsp/sysmanage/{1}.jsp</result>
+    		<!-- 配置权限拦截器 -->
+    		<interceptor-ref name="sysAuthStack" />
     	</action>
     </package>
 </struts>

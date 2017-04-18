@@ -1,7 +1,9 @@
+
 package com.partysys.sysmanage.party.entity;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
@@ -22,6 +26,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.partysys.partymanage.deus.entity.Deus;
+import com.partysys.partymanage.period.entity.Period;
 import com.partysys.sysmanage.branch.entity.Branch;
 
 /**
@@ -29,7 +35,7 @@ import com.partysys.sysmanage.branch.entity.Branch;
  * @author 朱可凡
  */
 @Entity
-@Table(name = "partymember", catalog = "partysys")
+@Table(name = "partymember")
 
 public class Partymember implements java.io.Serializable {
 
@@ -84,7 +90,7 @@ public class Partymember implements java.io.Serializable {
 	/**
 	 * 培养联系人
 	 */
-	private String[] cultivate;
+	private List<String> cultivate;
 	/**
 	 * 类别（是学生？老师？）
 	 */
@@ -118,7 +124,7 @@ public class Partymember implements java.io.Serializable {
 	 */
 	private Date appTime;
 	/**
-	 * 党校结业事件（年-月）
+	 * 党校结业时间（年-月）
 	 */
 	private Date graTime;
 	/**
@@ -130,9 +136,28 @@ public class Partymember implements java.io.Serializable {
 	 */
 	private String state;
 	/**
+	 * 是否是正式党员？（因为还有尚未入党的人员在本系统中）
+	 */
+	private String isFormal;
+	/**
+	 * 教师类别(专任教师，思政系列，教辅系列，管理人员)
+	 */
+	private String teacherType;
+	
+	/**
 	 * 党员所具有的角色
 	 */
 	private Set<Rolepartymember> rolepartymembers = new HashSet<Rolepartymember>(0);
+	
+	private Set<Period> periods = new HashSet<>();
+	
+	private Set<Deus> deus = new HashSet<>();
+	//教师类别
+	public static final String TEACHER_TYPE_OF_PROFESSION = "专任教师";
+	public static final String TEACHER_TYPE_OF_POLITICAL = "思政系列";
+	public static final String TEACHER_TYPE_OF_TEACHER = "教辅系列";
+	public static final String TEACHER_TYPE_OF_ADMIN = "管理人员";
+	
 	//用户状态
 	/**
 	 * 用户状态有效
@@ -146,7 +171,15 @@ public class Partymember implements java.io.Serializable {
 	//用户是老师还是学生
 	public static final String USER_TEACHER = "TEACHER";
 	public static final String USER_STUDENT = "STUDENT";
-
+	//判断党员是否是正式党员
+	/**
+	 * 正式党员标记
+	 */
+	public static final String IS_FORMAL = "FORMAL";
+	/**
+	 * 非正式党员
+	 */
+	public static final String IS_NOT_FORMAL = "NOTFORMAL";
 	
 	public Partymember() {
 	}
@@ -157,7 +190,7 @@ public class Partymember implements java.io.Serializable {
 	}
 
 	public Partymember(Branch branch, String name, boolean gender, String number, String nation, String identity,
-			String province, String telenumber, String grade, String class_, String[] cultivate, String classification,
+			String province, String telenumber, String grade, String class_, List<String> cultivate, String classification,
 			String branchId, String textnumber, Date joinTime, String roleId, String remake,
 			Set<Rolepartymember> rolepartymembers) {
 		this.branch = branch;
@@ -182,9 +215,7 @@ public class Partymember implements java.io.Serializable {
 	@GenericGenerator(name = "generator", strategy = "uuid.hex")
 	@Id
 	@GeneratedValue(generator = "generator")
-
-	@Column(name = "id", unique = true, nullable = false, length = 32)
-
+	@Column(name = "partymember_id", unique = true, nullable = false, length = 32)
 	public String getId() {
 		return this.id;
 	}
@@ -356,18 +387,18 @@ public class Partymember implements java.io.Serializable {
 		this.pclass = class_;
 	}
 	//集合属性，保存党员对应的培养人
-	@ElementCollection(targetClass=String.class)
+	@ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
 	//映射保存集合元素的表
-	@CollectionTable(name="cultivate_person",joinColumns=@JoinColumn(name="person_id",nullable=false))
+	@CollectionTable(name="cultivate_person",joinColumns=@JoinColumn(name="partymember_id",nullable=false))
 	//指定保存集合元素的列
 	@Column(name = "cultivate", length = 20)
 	//映射集合元素的索引列
 	@OrderColumn(name="t_order")
-	public String[] getCultivate() {
+	public List<String> getCultivate() {
 		return this.cultivate;
 	}
 
-	public void setCultivate(String[] cultivate) {
+	public void setCultivate(List<String> cultivate) {
 		this.cultivate = cultivate;
 	}
 
@@ -432,4 +463,71 @@ public class Partymember implements java.io.Serializable {
 	public void setRolepartymembers(Set<Rolepartymember> rolepartymembers) {
 		this.rolepartymembers = rolepartymembers;
 	}
+	
+	@Column(name="formal", length=10)
+	public String getIsFormal() {
+		return isFormal;
+	}
+
+	public void setIsFormal(String isFormal) {
+		this.isFormal = isFormal;
+	}
+	
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "partymembers")
+	public Set<Period> getPeriods() {
+		return periods;
+	}
+
+	public void setPeriods(Set<Period> periods) {
+		this.periods = periods;
+	}
+	
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "partymember")
+	public Set<Deus> getDeus() {
+		return deus;
+	}
+
+	public void setDeus(Set<Deus> deus) {
+		this.deus = deus;
+	}
+	
+	
+	@Column(name="teacher_type", length=20)
+	public String getTeacherType() {
+		return teacherType;
+	}
+
+	public void setTeacherType(String teacherType) {
+		this.teacherType = teacherType;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	/**
+	 * 用id号来区别党员（Set集合会用equals和HashCode来判断）
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Partymember other = (Partymember) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
 }

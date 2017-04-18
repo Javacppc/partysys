@@ -17,5 +17,10 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements Branch
 		super.setBaseDao(branchDao);
 		this.branchDao = branchDao;
 	}
+
+	@Override
+	public int findCount() {
+		return (int) branchDao.findCount();
+	}
 	
 }

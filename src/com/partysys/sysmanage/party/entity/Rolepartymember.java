@@ -18,7 +18,7 @@ import com.partysys.sysmanage.role.entity.Role;
  * @author 朱可凡
  */
 @Entity
-@Table(name = "rolepartymember", catalog = "partysys")
+@Table(name = "rolepartymember")
 /**
  * 党员角色表
  * @author 朱可凡

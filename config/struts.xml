@@ -9,28 +9,30 @@
 	
 	<package name="base-default" extends="struts-default">
 		<!-- 定义返回结果类型 -->
-		<!-- <result-types>
+		<result-types>
 			<result-type name="error" class="com.partysys.core.action.SysResultAction"></result-type>
 		</result-types>
 		<global-results>
 			<result name="error" type="error">/WEB-INF/jsp/error.jsp</result>
 			<result name="sysError">/WEB-INF/jsp/error.jsp</result>
 			<result name="input">/WEB-INF/jsp/error.jsp</result>
+			<!-- 在这里定义全集结果映射，当返回login视图名时转入noPermissionUI.jsp表示没有权限访问页面 -->
+			<result name="login">/WEB-INF/jsp/noPermissionUI.jsp</result>
 		</global-results>
 		<global-exception-mappings>
 			<exception-mapping result="sysError" exception="com.partysys.core.exception.SysException" />
 			<exception-mapping result="input" exception="java.lang.Exception"/>
-		</global-exception-mappings> -->
+		</global-exception-mappings>
 	</package>
 	
-	<!-- 导入测试模块的 test-struts.xml -->
+	<!-- 导入测试模块的配置文件 -->
 	<include file="com/partysys/test/conf/test-struts.xml" />
-	<!-- 导入系统管理模块的角色管理子模块的role-struts.xml -->
-	<include file="com/partysys/sysmanage/role/conf/role-struts.xml" />
-	<!-- 导入系统管理模块的信息发布管理子模块的info-struts.xml文件 -->
-	<include file="com/partysys/sysmanage/info/conf/info-struts.xml" />
-	<!-- 导入系统管理模块的支部管理子模块的branch-struts.xml文件 -->
-	<include file="com/partysys/sysmanage/branch/conf/branch-struts.xml" />
-	<!-- 导入系统管理模块的党员管理子模块的partymember-struts.xml文件 -->
-	<include file="com/partysys/sysmanage/party/conf/partymember-struts.xml" />
+	<!-- 导入系统管理模块所有的配置文件 -->
+	<include file="com/partysys/sysmanage/conf/sysmanage-struts.xml" />
+	<!-- 导入党建管理模块所有的配置文件 -->
+	<include file="com/partysys/partymanage/conf/partymanage-struts.xml" />
+	<!-- 导入管理系统的登录配置文件 -->
+	<include file="com/partysys/syshome/conf/home-struts.xml" />
+	<!-- 导入管理系统的主页配置文件 -->
+	<include file="com/partysys/syslogin/conf/login-struts.xml" />
 </struts>

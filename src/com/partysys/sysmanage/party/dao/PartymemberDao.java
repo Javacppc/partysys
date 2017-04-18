@@ -1,5 +1,6 @@
 package com.partysys.sysmanage.party.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.partysys.core.dao.BaseDao;
@@ -20,5 +21,18 @@ public interface PartymemberDao extends BaseDao<Partymember>{
 	 */
 	List<Partymember> findPartymemberByIdAndNumber(String id, String number);
 	List<Rolepartymember> findUserRoleByUserId(String id);
+	String findBranchIdByUserId(String id);
+	/**
+	 * 根据用户ID删除角色
+	 * @param id
+	 */
+	void deleteUserRoleByUserId(Serializable id);
+	/**
+	 * 通过学工号和密码查询
+	 * @param number
+	 * @param password
+	 * @return
+	 */
+	List<Partymember> findUserByNumberAndPass(String number, String password);
 	
 }

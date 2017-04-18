@@ -23,7 +23,7 @@ import com.partysys.sysmanage.party.entity.Rolepartymember;
  * @author 朱可凡
  */
 @Entity
-@Table(name = "role", catalog = "partysys")
+@Table(name = "role")
 
 public class Role implements java.io.Serializable {
 

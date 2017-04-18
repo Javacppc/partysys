@@ -1,3 +1,3 @@
 eclipse.preferences.version=1
-validator.Checked=src/com/partysys/sysmanage/party/conf/partymember-spring.xml,WebRoot/js/ueditor/jsp/config.json,src/com/partysys/sysmanage/branch/conf/branch-spring.xml,src/com/partysys/sysmanage/privilege/conf/privilege-spring.xml,WebRoot/js/ueditor/jsp/controller.jsp,src/com/partysys/sysmanage/role/conf/role-spring.xml
+validator.Checked=src/com/partysys/sysmanage/party/conf/partymember-spring.xml,WebRoot/js/ueditor/jsp/config.json,src/com/partysys/sysmanage/branch/conf/branch-spring.xml,src/com/partysys/syslogin/conf/login-struts.xml,src/com/partysys/core/util/ExcelUtil.java,src/com/partysys/sysmanage/privilege/conf/privilege-spring.xml,WebRoot/js/ueditor/jsp/controller.jsp,src/com/partysys/sysmanage/role/conf/role-spring.xml
 validator.Unchecked=

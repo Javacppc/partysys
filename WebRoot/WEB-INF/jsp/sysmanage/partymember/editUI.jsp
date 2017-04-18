@@ -44,6 +44,12 @@
 				pass.focus();
 				return false;//不准提交表单
     		}
+    		/* var iden = $("#identity");
+    		if (iden.val() == "") {
+    			alert('身份证号不能为空');
+    			iden.focus();
+    			return false;
+    		} */
     		//账号校验
     		onVerifyAccount();
     		if (vResult) {
@@ -63,7 +69,7 @@
     <table id="baseInfo" width="100%" align="center" class="list" border="0" cellpadding="0" cellspacing="0"  >
         <tr>
             <td class="tdBg" width="200px">所属部门：</td>
-            <td><s:select name="branchId" list="#mapDept" listKey="branchId" listValue="branchName"/></td>
+            <td><s:select name="nbranchId" list="#mapDept" headerKey="" headerValue="请选择" /></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">头像：</td>
@@ -88,17 +94,12 @@
         </tr>
         <tr>
         	<td class="tdBg" width="200px">密码：</td>
-            <!-- 密码默认为身份证后六位 -->
-            <s:if test="%{partymember.identity != null && partymember.identity != ''}">
-            	<td><s:password id="password" name="partymember.password" value="%{partymember.identity.substring(partymember.identity.length()-6,partymember.identity.length())}"/></td>
-        	</s:if>
-        	<s:else>
-        		<td><s:password id="password" name="partymember.password" /></td>
-        	</s:else>
+        	<!-- 密码默认值是学号后六位 -->
+        	<td><s:textfield id="password" name="partymember.password" /></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">性别：</td>
-            <td><s:radio list="#{'true':'男','false':'女'}" name="partymember.gender" /></td>
+            <td><s:radio list="#{true:'男',false:'女'}" name="partymember.gender" /></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">角色：</td>
@@ -110,7 +111,7 @@
        
         <tr>
             <td class="tdBg" width="200px">身份证号：</td>
-            <td><s:textfield name="partymember.identity"/></td>
+            <td><s:textfield id="identity" name="partymember.identity"/></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">联系方式：</td>
@@ -163,14 +164,14 @@
         </tr>
         <tr>
             <td class="tdBg" width="200px">年级：</td>
-            <td><s:select name="partymember.grade" list="{'大一','大二','大三','大四'}"/></td>
+            <td><s:textfield name="partymember.grade" /></td>
         </tr>
         <tr>
             <td class="tdBg" width="200px">班级：</td>
             <td><s:textfield name="partymember.pclass"/></td>
         </tr>
         <tr>	
-        	<td class="tgBg" width="200px">称呼：</td>
+        	<td class="tdBg" width="200px">称呼：</td>
         	<td><s:select name="partymember.classification" list="#{'TEACHER':'老师','STUDENT':'学生'}"/></td>
         </tr>
         <tr>
@@ -190,9 +191,14 @@
     <s:hidden name="strName"/>
     <s:hidden name="strNumber"/>
     <s:hidden name="strGrade"/>
+    <s:hidden name="strType"/>
     <!-- 如果在翻页时点击编辑仍然回到原来的那一页（及从哪里来就到哪里去）  -->
     <s:hidden name="pageNo"/>
     <s:hidden name="partymember.id"/>
+    <!-- 用隐藏域传递党员原来属于哪个部门 -->
+    <s:hidden name="prebranchId"/>
+    <!-- 用隐藏域传递党员原来的姓名（因为编辑时有可能会改姓名） -->
+    <s:hidden name="preusername"/>
     <div class="tc mt20">
         <input type="button" class="btnB2" value="保存" onclick="onSubmit()" />
         &nbsp;&nbsp;&nbsp;&nbsp;

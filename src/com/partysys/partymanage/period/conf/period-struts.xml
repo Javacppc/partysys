@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <package name="period-action" extends="base-default" namespace="/partymanage">
+    	<action name="period_*" class="com.partysys.partymanage.period.action.PeriodAction" method="{1}">
+    		<result name="{1}">/WEB-INF/jsp/partymanage/period/{1}.jsp</result>
+    		<result name="list" type="redirectAction">
+    			<param name="actionName">period_listUI</param>
+    			<param name="period.title">${strTitle}</param>
+    			<param name="encode">true</param>
+    			<param name="pageNo">${pageNo}</param>
+    		</result>		
+    	</action>
+    </package>
+</struts>

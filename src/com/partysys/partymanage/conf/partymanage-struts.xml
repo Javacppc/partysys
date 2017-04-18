@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 配置应用中所有的拦截器 -->
+	<package name="partymanage-default" extends="base-default" namespace="/partymanage">
+		<!-- <interceptors>
+			<interceptor name="sysAuth" class="com.partysys.partymanage.interceptor.AuthInterceptor" />
+			<interceptor-stack name="sysAuthStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="sysAuth" />
+			</interceptor-stack>
+		</interceptors> -->
+	</package>
+
+	<!-- 导入党员管理模块的汇总党费子模块period-struts.xml文件 -->
+	<include file="com/partysys/partymanage/period/conf/period-struts.xml" />
+	<!-- 导入党员管理模块的党费管理子模块deus-struts.xml文件 -->
+	<include file="com/partysys/partymanage/deus/conf/deus-struts.xml" />
+</struts>

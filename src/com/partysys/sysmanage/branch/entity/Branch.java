@@ -26,7 +26,7 @@ import com.partysys.sysmanage.party.entity.Partymember;
  * @author 朱可凡
  */
 @Entity
-@Table(name = "branch", catalog = "partysys")
+@Table(name = "branch")
 
 public class Branch implements java.io.Serializable {
 
@@ -87,7 +87,7 @@ public class Branch implements java.io.Serializable {
 		this.branchName = branchName;
 	}
 	@ElementCollection(targetClass=String.class,fetch=FetchType.EAGER)
-	@CollectionTable(name="br_admin",joinColumns=@JoinColumn(name="admin_id", nullable=false))
+	@CollectionTable(name="br_admin",joinColumns=@JoinColumn(name="branch_id", nullable=false))
 	@Column(name = "branch_admin", length = 100)
 	@OrderColumn(name="t_order")
 	public List<String> getBranchAdmin() {

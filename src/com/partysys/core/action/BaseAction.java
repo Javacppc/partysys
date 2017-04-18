@@ -12,7 +12,7 @@ import com.partysys.core.page.PageResult;
  */
 public abstract class BaseAction extends ActionSupport {
 	/**
-	 * 用於批量刪除時用
+	 * 用于批量删除时用
 	 */
 	protected String[] selectedRow;
 	
@@ -31,7 +31,7 @@ public abstract class BaseAction extends ActionSupport {
 	/**
 	 * 设置默认每页显示的记录数
 	 */
-	public static final int DEFAULT_PAGE_SIZE = 5;
+	public static final int DEFAULT_PAGE_SIZE = 9;
 	
 	
 	public PageResult getPageResult() {

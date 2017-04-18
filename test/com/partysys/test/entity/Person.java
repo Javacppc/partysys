@@ -10,17 +10,11 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 @Entity
-@Table(name="tax_person")
+@Table(name="party_person_test")
 public class Person implements Serializable {
-	@Id
-	//该主键生成器的名字是fk_uuid  使用Hibernate的uuid策略
-	@GenericGenerator(name="fk_uuid", strategy="uuid")
-	//使用fk_uuid主键生成器
-	@GeneratedValue(generator="fk_uuid")
-	@Column(length=32, name="person_id")
+	
 	private String id;
-	//该列不能为空值
-	@Column(name="person_name", length=20, nullable=false)
+	
 	private String name;
 	public Person() {
 		
@@ -34,13 +28,20 @@ public class Person implements Serializable {
 		super();
 		this.name = name;
 	}
-	
+	@Id
+	//该主键生成器的名字是fk_uuid  使用Hibernate的uuid策略
+	@GenericGenerator(name="fk_uuid", strategy="uuid.hex")
+	//使用fk_uuid主键生成器
+	@GeneratedValue(generator="fk_uuid")
+	@Column(length=32, name="person_id")
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
+	//该列不能为空值
+	@Column(name="person_name", length=20, nullable=false)
 	public String getName() {
 		return name;
 	}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 配置应用中所有的拦截器 -->
+	<package name="sysmanage-default" extends="base-default" namespace="/sysmanage">
+		<interceptors>
+			<!-- 配置权限管理的拦截器 -->
+			<interceptor name="sysAuth" class="com.partysys.sysmanage.interceptor.AuthInterceptor" />
+			<interceptor-stack name="sysAuthStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="sysAuth" />
+			</interceptor-stack>
+		</interceptors>
+	</package>
+
+	<!-- 系统管理模块总配置 -->
+	<!-- 导入系统管理模块的角色管理子模块的role-struts.xml -->
+	<include file="com/partysys/sysmanage/role/conf/role-struts.xml" />
+	<!-- 导入系统管理模块的信息发布管理子模块的info-struts.xml文件 -->
+	<include file="com/partysys/sysmanage/info/conf/info-struts.xml" />
+	<!-- 导入系统管理模块的支部管理子模块的branch-struts.xml文件 -->
+	<include file="com/partysys/sysmanage/branch/conf/branch-struts.xml" />
+	<!-- 导入系统管理模块的党员管理子模块的partymember-struts.xml文件 -->
+	<include file="com/partysys/sysmanage/party/conf/partymember-struts.xml" />
+	<!-- 导入系统管理模块首页的配置文件 -->
+	<include file="com/partysys/sysmanage/home/conf/home-struts.xml" />
+</struts>

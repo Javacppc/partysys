@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @author MyEclipse Persistence Tools
  */
 @Entity
-@Table(name = "info", catalog = "partysys")
+@Table(name = "info")
 
 public class Info implements java.io.Serializable {
 

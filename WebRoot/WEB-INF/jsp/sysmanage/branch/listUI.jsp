@@ -49,9 +49,45 @@
   		document.forms[0].action = list_url;
   		document.forms[0].submit();
   	}
-  	//根据支部名称在党员表里查询出属于该支部的所有成员
+  	/* //根据支部名称在党员表里查询出属于该支部的所有成员
   	function doMemberManage(branchId) {
   		
+  	} */
+  	var vResult = false;
+  	function onVerify() {
+  		var branch = $("#branchEdit").val();
+  		//支部字段填写了值
+  		if (branch != "") {
+   			$.ajax({
+   				url: "${basePath}sysmanage/branch_verify.action",
+   				data: {"branch.branchName" : branch},
+   				type: "post",
+   				async: false,
+   				success: function(msg) {
+   					if ("true" != msg) {
+   						alert("相同的支部名已经存在，请使用其他名称！");
+   						$("#branchEdit").focus();
+   						vResult = false;
+   					} else {
+   						vResult = true;
+   					}
+   				}
+   			});
+   		}
+  	}
+  	function onSubmit() {
+  		var branch = $("#branchEdit");
+  		if (branch.val() == "") {
+			alert("支部名不可以为空！");
+			branch.focus();
+			return false;
+  		}
+  		onVerify();
+  		if (vResult) {
+   			//提交表单
+   			document.forms[0].action = "${basePath}sysmanage/branch_add.action";
+   			document.forms[0].submit();
+   		}
   	}
     </script>
    
@@ -112,17 +148,17 @@
     </div>
 </form>
 <div id="alert">
-	<form name="addBranch" method="post" action="${basePath}sysmanage/branch_add.action">
+	<form name="addBranch" method="post" action="">
 		<h4><span>新增</span><span id="close">关闭</span></h4>
-		<p><label>支部名称:</label><input name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
-		<p><input type="submit" value="提交" class="sub" /><input type="reset" value="重置" class="sub" /></p> 
+		<p><label>支部名称:</label><input id="branchEdit" name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
+		<p><input type="submit" value="提交" class="sub" onClick="onSubmit()"/><input type="reset" value="重置" class="sub" /></p> 
 	</form>
 </div>
 
 <div id="alert1">
 	<form name="editBranch" method="post" action="">
 		<h4><span>编辑</span><span id="close1">关闭</span></h4>
-		<p><label>支部名称:</label><input id="branchEdit" name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
+		<p><label>支部名称:</label><input id="branchEdit1" name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
 		<p><input type="submit" value="提交" class="sub" /><input type="reset" value="重置" class="sub" /></p> 
 	</form>
 </div>

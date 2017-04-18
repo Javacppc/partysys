@@ -20,7 +20,7 @@ import com.partysys.sysmanage.role.entity.Roleprivilege;
  * @author 朱可凡
  */
 @Entity
-@Table(name = "privilege", catalog = "partysys")
+@Table(name = "privilege")
 
 
 public class Privilege implements java.io.Serializable {

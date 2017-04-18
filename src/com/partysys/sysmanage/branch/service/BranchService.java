@@ -5,4 +5,6 @@ import com.partysys.sysmanage.branch.entity.Branch;
 
 public interface BranchService extends BaseService<Branch>{
 
+	int findCount();
+
 }

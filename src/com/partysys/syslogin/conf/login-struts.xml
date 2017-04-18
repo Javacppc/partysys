@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="login-action" extends="base-default" namespace="/sys">
+    	<action name="login_*" class="com.partysys.syslogin.action.LoginAction" method="{1}">
+    		<result name="{1}">/WEB-INF/jsp/{1}.jsp</result>
+    		<result name="loginUI">/WEB-INF/jsp/loginUI.jsp</result>
+    		<!-- 用拦截器来实现权限控制 2017_4_18 by 朱可凡   -->
+    		<!-- <result name="noPermissionUI">/WEB-INF/jsp/noPermissionUI.jsp</result> -->
+    		<result name="homepage" type="redirectAction">
+    			<param name="actionName">home</param>
+    		</result>
+    	</action>
+    </package>
+</struts>
