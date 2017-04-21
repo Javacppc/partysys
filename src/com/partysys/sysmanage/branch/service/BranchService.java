@@ -7,4 +7,6 @@ public interface BranchService extends BaseService<Branch>{
 
 	int findCount();
 
+	Branch findBranchByIdAndName(String branchId, String branchName);
+
 }

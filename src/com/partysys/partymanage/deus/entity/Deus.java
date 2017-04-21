@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.partysys.partymanage.period.entity.Period;
@@ -21,6 +23,7 @@ import com.partysys.test.entity.Person;
  */
 @Entity
 @Table(name="deus")
+@Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region="Configuration")
 public class Deus {
 	
 	private String deusId;
@@ -33,6 +36,10 @@ public class Deus {
 	private Partymember partymember;
 	
 	private Period period;
+	/**
+	 * 经办人
+	 */
+	private String manager;
 	
 	@Id
 	@Column(name="deus_id", length=32)
@@ -72,4 +79,13 @@ public class Deus {
 	public void setPeriod(Period period) {
 		this.period = period;
 	}
+	@Column(name="mamager", length=10)
+	public String getManager() {
+		return manager;
+	}
+
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
+	
 }

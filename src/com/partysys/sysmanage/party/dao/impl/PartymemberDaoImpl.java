@@ -62,4 +62,9 @@ public class PartymemberDaoImpl extends BaseDaoImpl<Partymember> implements Part
 		query.setParameter(1, password);
 		return query.list();
 	}
+
+	@Override
+	public void deleteCultivateById(Serializable id) {
+		
+	}
 }

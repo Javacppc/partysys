@@ -9,8 +9,8 @@
 <html>
 <head>
     <base href="<%=basePath%>"/>
-    <link href="${ctx}/css/sysmanage/css.css" rel="stylesheet" type="text/css"/>
-    <link href="${ctx}/css/sysmanage/style.css" rel="stylesheet" type="text/css"/>
+    <link href="${ctx}/css/partymanage/css.css" rel="stylesheet" type="text/css"/>
+    <link href="${ctx}/css/partymanage/style.css" rel="stylesheet" type="text/css"/>
     <script src="${ctx}/js/jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         // 隐藏菜单
@@ -74,18 +74,19 @@
         <div class="nBox" style="width:214px;">
             <div class="x_top" style="width:214px;"></div>
             <div class="sm">
-            
+            	<!-- 党费管理模块 -->
             	<dl>
-                    <dt><a class="xxfb" href="${ctx}sysmanage/info_listUI.action" target="mainFrame"><b></b>信息发布<s
+                    <dt><a class="xxfb" href="${ctx}partymanage/deus_listUI.action" target="mainFrame"><b></b>党费管理<s
                             class="down"></s> </a></dt>
                 </dl>
 				
-                <dl class="">
+                <%-- <dl class="">
                     <dt><a class="yh" href="${ctx }sysmanage/partymember_listUI.action" target="mainFrame"><b></b>党员管理<s class="down"></s>
                     </a></dt>
-                </dl>
+                </dl> --%>
+                <!-- 汇总党费模块 -->
 				<dl class="">
-                    <dt><a class="yh" href="${ctx }sysmanage/role_listUI.action" target="mainFrame"><b></b>角色管理<s class="down"></s>
+                    <dt><a class="yh" href="${ctx }partymanage/period_listUI.action" target="mainFrame"><b></b>汇总党费<s class="down"></s>
                     </a></dt>
                 </dl>
                 
@@ -94,8 +95,9 @@
                 <!-- <dl class="">
                     <dt><a class="tssl" href="javascript:void(0);" target="mainFrame"><b></b>数据备份<s class="down"></s> </a></dt>
                 </dl> -->
+                <!-- TODO 暂时不开发 -->
                 <dl class="">
-                    <dt><a class="fwdc" href="${ctx }sysmanage/branch_listUI.action" target="mainFrame"><b></b>支部管理<s class="down"></s> </a></dt>
+                    <dt><a class="fwdc" href="javascript:void(0);" target="mainFrame"><b></b>年底考核管理<s class="down"></s> </a></dt>
                 </dl>
 
 				<!-- 17.4.9 -lxy
@@ -118,7 +120,6 @@
                         <a class="" href="#" target="mainFrame"><b></b>预约事项</a>
                     </dd>
                 </dl>
-                
                  -->
             </div>
         </div>

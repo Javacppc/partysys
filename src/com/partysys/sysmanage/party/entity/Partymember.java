@@ -15,7 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -24,6 +23,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.partysys.partymanage.deus.entity.Deus;
@@ -36,7 +37,7 @@ import com.partysys.sysmanage.branch.entity.Branch;
  */
 @Entity
 @Table(name = "partymember")
-
+@Cache(usage=CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region="SecondLevel")
 public class Partymember implements java.io.Serializable {
 
 	/**

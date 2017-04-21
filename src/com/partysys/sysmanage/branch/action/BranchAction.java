@@ -127,10 +127,11 @@ public class BranchAction extends BaseAction{
 	public void verify() throws Exception{
 		try {
 			if (branch != null && branch.getBranchName() != null) {
-				QueryHelper helper = new QueryHelper(Branch.class, "b");
-				helper.addWhereClause("b.branchName = ?", branch.getBranchName());
+				/*QueryHelper helper = new QueryHelper(Branch.class, "b");
+				helper.addWhereClause("b.branchName = ?", branch.getBranchName());*/
+				Branch exbranch = branchService.findBranchByIdAndName(branch.getBranchId(), branch.getBranchName());
 				String result = "true";
-				if (!branchService.find(helper).isEmpty()) {
+				if (exbranch != null) {
 					//表示有该支部了
 					result = "false";
 				}
@@ -167,5 +168,4 @@ public class BranchAction extends BaseAction{
 	public void setStrTitle(String strTitle) {
 		this.strTitle = strTitle;
 	}
-	
 }

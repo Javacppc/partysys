@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+    <!-- 磁盘上持久化缓存位置 -->
+    <diskStore path="java.io.tmpdir" />
+ 
+    <cache 
+    name="SecondLevel" 
+    timeToIdleSeconds="300" 
+    timeToLiveSeconds="1800" 
+    eternal="false" overflowToDisk="false" 
+    diskPersistent="false" memoryStoreEvictionPolicy="LFU" />
+    
+    <cache name="Remote"  
+    timeToIdleSeconds="300" timeToLiveSeconds="1800" 
+    eternal="false" overflowToDisk="false" 
+    diskPersistent="false" memoryStoreEvictionPolicy="LFU" />
+    
+    <cache name="Configuration" 
+    timeToIdleSeconds="300" timeToLiveSeconds="0" 
+    eternal="false" overflowToDisk="false" 
+    diskPersistent="false" 
+    memoryStoreEvictionPolicy="LFU" />
+</ehcache>

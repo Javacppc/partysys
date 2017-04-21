@@ -12,7 +12,7 @@
 		#alert p input {width:120px;margin-left:20px;} 
 		#alert p input.myinp {border:1px solid #ccc;height:16px;} 
 		#alert p input.sub {width:60px;margin-left:33px;} 
-		
+		#alert p input.sub2 {width:60px;margin-left:33px;} 
 		#alert1 {border:1px solid #369;width:300px;height:100px;background:#e2ecf5;z-index:1000;position:absolute;display:none;} 
 		#alert1 h4 {height:20px;background:#369;color:#fff;padding:5px 0 0 5px;} 
 		#alert1 h4 span {float:left;} 
@@ -20,7 +20,7 @@
 		#alert1 p {padding:12px 0 0 30px;} 
 		#alert1 p input {width:120px;margin-left:20px;} 
 		#alert1 p input.myinp {border:1px solid #ccc;height:16px;} 
-		#alert1 p input.sub {width:60px;margin-left:30px;} 
+		#alert1 p input.sub1 {width:60px;margin-left:30px;} 
     </style>
     <script type="text/javascript">
   
@@ -49,11 +49,6 @@
   		document.forms[0].action = list_url;
   		document.forms[0].submit();
   	}
-  	/* //根据支部名称在党员表里查询出属于该支部的所有成员
-  	function doMemberManage(branchId) {
-  		
-  	} */
-  	var vResult = false;
   	function onVerify() {
   		var branch = $("#branchEdit").val();
   		//支部字段填写了值
@@ -67,15 +62,13 @@
    					if ("true" != msg) {
    						alert("相同的支部名已经存在，请使用其他名称！");
    						$("#branchEdit").focus();
-   						vResult = false;
-   					} else {
-   						vResult = true;
+   						$("#alert p input.sub").attr("disabled","true");
    					}
    				}
    			});
    		}
   	}
-  	function onSubmit() {
+  	/* function onSubmit() {
   		var branch = $("#branchEdit");
   		if (branch.val() == "") {
 			alert("支部名不可以为空！");
@@ -88,7 +81,7 @@
    			document.forms[0].action = "${basePath}sysmanage/branch_add.action";
    			document.forms[0].submit();
    		}
-  	}
+  	} */
     </script>
    
 </head>
@@ -135,8 +128,6 @@
                                 <td align="center">
                                     <a href="javascript:doEdit('<s:property value='branchId'/>','<s:property value='branchName'/>')">编辑</a>
                                     <a href="javascript:doDelete('<s:property value='branchId'/>')">删除</a>
-                                    <!-- 每一个支部下都有很多成员，点击这里显示该支部下所拥有的所有成员 ，传入支部名称在党员信息表里查询以便显示该支部所有的成员-->
-                                    <a href="javascript:doMemberManage('<s:property value='branchId'/>')">成员管理</a>
                                 </td>
                             </tr>
                            </s:iterator>
@@ -148,10 +139,10 @@
     </div>
 </form>
 <div id="alert">
-	<form name="addBranch" method="post" action="">
+	<form name="addBranch" method="post" action="${basePath}sysmanage/branch_add.action">
 		<h4><span>新增</span><span id="close">关闭</span></h4>
-		<p><label>支部名称:</label><input id="branchEdit" name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
-		<p><input type="submit" value="提交" class="sub" onClick="onSubmit()"/><input type="reset" value="重置" class="sub" /></p> 
+		<p><label>支部名称:</label><input id="branchEdit" onchange="onVerify();" name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
+		<p><input type="submit" value="提交" class="sub" /><input type="reset" value="重置" class="sub2" /></p> 
 	</form>
 </div>
 
@@ -159,7 +150,7 @@
 	<form name="editBranch" method="post" action="">
 		<h4><span>编辑</span><span id="close1">关闭</span></h4>
 		<p><label>支部名称:</label><input id="branchEdit1" name="branch.branchName" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>  
-		<p><input type="submit" value="提交" class="sub" /><input type="reset" value="重置" class="sub" /></p> 
+		<p><input type="submit" value="提交" class="sub1" /><input type="reset" value="重置" class="sub1" /></p> 
 	</form>
 </div>
 <script type="text/javascript">
@@ -213,7 +204,7 @@
 		mybg.style.filter = "Alpha(opacity=30)"; 
 		document.body.appendChild(mybg);
 		document.body.style.overflow = "hidden";
-		$("#branchEdit").val(branchName);
+		$("#branchEdit1").val(branchName);
 		document.forms[2].action="${basePath}sysmanage/branch_edit.action?branch.branchId="+id;
   	}
   	

@@ -112,6 +112,7 @@ public class PartymemberServiceImpl extends BaseServiceImpl<Partymember> impleme
 	public void delete(Serializable id) {
 		//先删除党员对应的角色信息(从表)
 		partymemberDao.deleteUserRoleByUserId(id);
+		//partymemberDao.deleteCultivateById(id);
 		//再删除党员信息（主表）
 		partymemberDao.delete(id);
 	}

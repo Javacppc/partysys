@@ -37,8 +37,18 @@ public class Period {
 	private Set<Partymember> partymembers = new HashSet<>();
 	
 	private Set<Deus> deus = new HashSet<>();
-	
-	
+	/**
+	 * 期数创建人类别（是教师创建的还是学生创建的）
+	 */
+	private String creator;
+	/**
+	 * 创建人是学生
+	 */
+	public static final String CREATOR_STUDENT = "STUDENT";
+	/**
+	 * 创建人是教师
+	 */
+	public static final String CREATOR_TEACHER = "TEACHER";
 	
 	@Id
 	@Column(name="period_id", length=32)
@@ -80,5 +90,13 @@ public class Period {
 
 	public void setDeus(Set<Deus> deus) {
 		this.deus = deus;
+	}
+	@Column(name="creator_type", length=10)
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 }

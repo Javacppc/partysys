@@ -16,4 +16,8 @@ public class PeriodServiceImpl extends BaseServiceImpl<Period> implements Period
 		super.setBaseDao(periodDao);
 		this.periodDao = periodDao;
 	}
+	@Override
+	public Period findPeriodByIdAndDate(String periodId, String date) {
+		return periodDao.findPeriodByIdAndDate(periodId, date);
+	}
 }

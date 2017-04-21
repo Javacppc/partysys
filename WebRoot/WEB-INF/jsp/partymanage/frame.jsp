@@ -9,17 +9,17 @@
 <head>
     <base href="<%=basePath%>"/>
     <!-- <title>党建学习管理平台-党建管理</title> -->
-    <title>系统管理</title>
-    <link href="${basePath}css/sysmanage/css.css" rel="stylesheet" type="text/css" />
-    <link href="${basePath}css/sysmanage/style.css" rel="stylesheet" type="text/css" />
+    <title>党建管理</title>
+    <link href="${basePath}css/partymanage/css.css" rel="stylesheet" type="text/css" />
+    <link href="${basePath}css/partymanage/style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<frameset cols="*,1222,*" class="bj" frameborder="no" border="0" framespacing="0" name="sysframe">
-    <frame src="${basePath}common/bg.jsp" scrolling="No" noresize="noresize"/>
-    <frameset rows="156,*" cols="*" frameborder="no" border="0" framespacing="0"> 
-        <frame src="${basePath}sysmanage/home_top.action" scrolling="No" noresize="noresize" id="topFrame" />
+<frameset cols="*,1222,*" class="bj" frameborder="no" border="0" framespacing="0" name="partyframe">
+    <frame src="${basePath}common/bg.jsp" scrolling="No" noresize="noresize"  style="width: 170px;"/>
+    <frameset rows="156,*" cols="*" frameborder="no" border="0" framespacing="0">
+        <frame src="${basePath }partymanage/home_top.action" name="topFrame" scrolling="No" noresize="noresize" id="topFrame"/>
         <frameset cols="14%,60%" frameborder="no" border="0" framespacing="0">
-            <frame src="${basePath}sysmanage/home_left.action" scrolling="yes" noresize="noresize" id="leftFrame" name="leftFrame"/>
+            <frame src="${basePath }partymanage/home_left.action" scrolling="yes" noresize="noresize" id="leftFrame" />
             <frame src="${basePath}common/welcome.jsp" name="mainFrame" id="mainFrame" />
         </frameset>
     </frameset>

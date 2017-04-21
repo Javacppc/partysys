@@ -10,6 +10,7 @@ import com.partysys.sysmanage.branch.service.BranchService;
 @Service("branchService")
 public class BranchServiceImpl extends BaseServiceImpl<Branch> implements BranchService{
 	
+	
 	private BranchDao branchDao;
 	
 	@Autowired
@@ -21,6 +22,11 @@ public class BranchServiceImpl extends BaseServiceImpl<Branch> implements Branch
 	@Override
 	public int findCount() {
 		return (int) branchDao.findCount();
+	}
+
+	@Override
+	public Branch findBranchByIdAndName(String branchId, String branchName) {
+		return branchDao.findBranchByIdAndName(branchId, branchName);
 	}
 	
 }

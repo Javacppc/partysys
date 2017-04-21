@@ -3,6 +3,7 @@ package com.partysys.sysmanage.party.action;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -201,22 +202,24 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 				partymemberService.update(partymember);			
 				
 				//获取该党员的支部信息（通过支部Id找到这个支部对象，然后实现支部对象和党员对象之间的关联）
-				Branch branch = branchService.findById(nbranchId);
-				//保存用户所属支部的关联关系(从表设置关联关系)
-				partymember.setBranch(branch);
-				//此时支部人数增加了
-				branch.getPartymembers().add(partymember);
-				//查找到党员所具备的所有角色
-				List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(partymember.getId());
-				//新增的党员信息必须是支部管理员，它才属于这个支部的管理员，所以下面要判断一下这个新增党员是否是支部管理员
-				for (Rolepartymember mem : roles) {
-					//如果用户具有支部相关角色则把该用户存放到Branch的BranchAdmin字段（因为只有支部管理员才是这个支部的管理员）
-					if (mem.getRole().getRoleName().contains("支部")) {
-						branch.getBranchAdmin().add(partymember.getName());
+				if (!nbranchId.equals("")) {
+					Branch branch = branchService.findById(nbranchId);
+					//保存用户所属支部的关联关系(从表设置关联关系)
+					partymember.setBranch(branch);
+					//此时支部人数增加了
+					branch.getPartymembers().add(partymember);
+					//查找到党员所具备的所有角色
+					List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(partymember.getId());
+					//新增的党员信息必须是支部管理员，它才属于这个支部的管理员，所以下面要判断一下这个新增党员是否是支部管理员
+					for (Rolepartymember mem : roles) {
+						//如果用户具有支部相关角色则把该用户存放到Branch的BranchAdmin字段（因为只有支部管理员才是这个支部的管理员）
+						if (mem.getRole().getRoleName().contains("支部")) {
+							branch.getBranchAdmin().add(partymember.getName());
+						}
 					}
+					//更新支部表信息(添加完党员信息之后就需要修改支部信息---因为支部肯定人数会增加，以及可能会有新的管理员)
+					branchService.update(branch);
 				}
-				//更新支部表信息(添加完党员信息之后就需要修改支部信息---因为支部肯定人数会增加，以及可能会有新的管理员)
-				branchService.update(branch);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -406,8 +409,11 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 				 strNumber = partymember.getNumber();
 				 strType = partymember.getClassification();
 				 Partymember pm = partymemberService.findById(partymember.getId());
+				 deleteCultivate(pm);
 				 //删除支部信息
-				 deleteBranch(pm);
+				 if (pm.getBranch() != null) 
+					 deleteBranch(pm);
+				 System.out.println(partymember.getId());
 				 //删除党员以及党员对应的角色信息
 				 partymemberService.delete(partymember.getId());
 			 }
@@ -416,6 +422,13 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 			throw new ActionException("Action层出现异常，异常信息是：" + e.getMessage());
 		}
 		return "list";
+	}
+	private void deleteCultivate(Partymember pm) {
+		Iterator<String> it = pm.getCultivate().iterator();
+		 while (it.hasNext()) {
+			 it.next();
+			 it.remove();
+		 }
 	}
 	/**
 	 * 删除党员支部信息
@@ -427,7 +440,7 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 		 Branch branch = branchService.findById(pm.getBranch().getBranchId());
 		 System.out.println(branch.getBranchName());
 		 //在支部表中删除对应的党员
-		 branch.getPartymembers().remove(pm);
+	     branch.getPartymembers().remove(pm);
 		 List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(pm.getId());
 		 //删除支部表对应的管理员信息（如果是支部管理员的话）
 		 for (Rolepartymember mem : roles) {
@@ -454,8 +467,10 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 				Partymember  pm;
 				for (String id : selectedRow) {
 					pm = partymemberService.findById(id);
+					deleteCultivate(pm);
 					//删除支部表中有关该党员的所有信息(原来党员的Id，党员的姓名)
-					deleteBranch(pm);
+					if (pm.getBranch() != null) 
+						deleteBranch(pm);
 					partymemberService.delete(id);
 				}
 			}

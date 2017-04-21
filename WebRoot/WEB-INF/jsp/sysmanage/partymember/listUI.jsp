@@ -33,6 +33,7 @@
 		#alert2 h4 span#close2 {margin-left:250px;font-weight:500;cursor:pointer;} 
 		#alert2 p {padding:12px 0 0 30px;} 
 		#alert2 p input {width:120px;margin-left:20px;} 
+		#alert1 p input.myinp {border:1px solid #ccc;height:25px;}
 		#alert2 p input.sub {width:60px;margin-left:60px;}  
     </style>
     <script>
@@ -185,8 +186,9 @@
 		<h4><span>确定删除</span><span id="close2">关闭</span></h4>
 		<p>
 			<label>确定删除该党员?</label>
+			<input hidden="hidden" class="myinp"/>
 		</p>
-		<p><input id="ensureDelete" type="button" value="确定" class="sub" /></p> 
+		<p><input id="ensureDelete" type="button" value="确定" class="sub" /><input hidden="hidden" class="sub"/></p> 
 </div>
 
 <script type="text/javascript">
@@ -269,18 +271,12 @@
 		mybg.style.filter = "Alpha(opacity=30)"; 
 		document.body.appendChild(mybg);
 		document.body.style.overflow = "hidden";
-		/* $(document).ready(function() {
-		$("#ensureDelete").onClick(function() {
-			javascript:doEnsureDelete(id);
+		$(function() {//页面加载成功后要做的事情
+			$("#ensureDelete").click(function() {
+				doEnsureDelete(id);	
+			});
 		});
-		}); */
-		document.getElementById('#alert2 p input#ensureDelete').addEventListener('click', 
-		function() {
-			javascript:doEnsureDelete(id);	
-		}, false);
 	}
-	
-	
 	mClose2.onclick = function() 
 	{ 
 		myAlert2.style.display = "none"; 

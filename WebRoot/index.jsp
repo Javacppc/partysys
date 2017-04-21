@@ -3,7 +3,8 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 //直接跳转到登陆页面
-response.sendRedirect(basePath + "sys/login_toLoginUI.action");
+//response.sendRedirect(basePath + "sys/login_toLoginUI.action");
+response.sendRedirect(basePath + "sys/home.action");
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

@@ -7,8 +7,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<link href="${basePath}css/sysmanage/css.css" rel="stylesheet" type="text/css" />
-	<link href="${basePath}css/sysmanage/style.css" rel="stylesheet" type="text/css" />
+	<link href="${basePath}css/partymanage/css.css" rel="stylesheet" type="text/css" />
+	<link href="${basePath}css/partymanage/style.css" rel="stylesheet" type="text/css" />
 <!--[if IE 6]>
 <script type="text/javascript" src="${basePath}js/DD_belatedPNG.js" ></script>
 <script type="text/javascript">
@@ -23,6 +23,8 @@
 	function delCookie() {
 		top.document.cookie = "TopNode=;expires=Fri, 31 Dec 1999 23:59:59 GMT;";
 	}
+	var v = 1;
+	alert(typeof v);
 </script>
 </head>
 
@@ -85,7 +87,7 @@
                         <td align="left"><a><b></b><font color="red">欢迎您，${sessionScope.SYS_USER.name }</font></a></td>
                         <td align="center"><img src="${basePath}images/sysmanage/help1.png" width="5"height="17" /></td>
 						<td align="left"><a href="javascript:void(0)"><font color="red">帮助</font></a></td>
-						<td width="17" align="center"><img src="${basePath}images/sysmanage/exit1.png"width="14" height="14"/></td>
+						<td width="17" align="center"><img src="${basePath}images/sysmanage/exit1.png" width="14" height="14"/></td>
 						<td align="left" valign="middle"><a href="${basePath}sys/login_logout.action" target="_top"><font color="red">退出</font></a></td>
 					</tr>
 				</table>
@@ -100,6 +102,9 @@
 				<li><a href="${basePath}sys/home.action" target="_top">工作主页</a></li>
                 <li><a href="javascript:void(0);">党员学习</a></li>
                 <li><a href="javascript:void(0);">民生平台</a></li>
+               <%--  <li><a href="${basePath}partymanage/home_frame.action" target="partyframe">党建管理</a></li>
+                <li><a href="${basePath}sysmanage/home_frame.action" target="sysframe">系统管理</a></li> --%>
+                
                 <li><a href="${basePath}partymanage/home_frame.action" target="_top">党建管理</a></li>
                 <li><a href="${basePath}sysmanage/home_frame.action" target="_top">系统管理</a></li>
 			</ul>

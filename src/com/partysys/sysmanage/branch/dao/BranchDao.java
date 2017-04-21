@@ -5,4 +5,6 @@ import com.partysys.sysmanage.branch.entity.Branch;
 
 public interface BranchDao extends BaseDao<Branch>{
 
+	Branch findBranchByIdAndName(String branchId, String branchName);
+
 }

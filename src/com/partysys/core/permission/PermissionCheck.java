@@ -9,5 +9,5 @@ public interface PermissionCheck {
 	 * @param code
 	 * @return
 	 */
-	public boolean isAccess(Partymember p, String code);
+	public boolean isAccess(Partymember p, String code) throws Exception;
 }

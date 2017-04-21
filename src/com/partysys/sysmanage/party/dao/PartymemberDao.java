@@ -34,5 +34,10 @@ public interface PartymemberDao extends BaseDao<Partymember>{
 	 * @return
 	 */
 	List<Partymember> findUserByNumberAndPass(String number, String password);
+	/**
+	 * 删除党员对应的培养人
+	 * @param id
+	 */
+	void deleteCultivateById(Serializable id);
 	
 }
