@@ -33,7 +33,7 @@
 		#alert2 h4 span#close2 {margin-left:250px;font-weight:500;cursor:pointer;} 
 		#alert2 p {padding:12px 0 0 30px;} 
 		#alert2 p input {width:120px;margin-left:20px;} 
-		#alert1 p input.myinp {border:1px solid #ccc;height:25px;}
+		#alert2 p input.myinp {border:1px solid #ccc;height:25px;}
 		#alert2 p input.sub {width:60px;margin-left:60px;}  
     </style>
     <script>
@@ -44,7 +44,7 @@
 			//prop jquery 1.6+建议使用
 			$("input[name=selectedRow]").prop("checked", $("#selAll").is(":checked"));		
 		}
-		//彈出新增頁面
+		//弹出新增页面
 		function doAdd() {
 			document.forms[0].action = "${basePath}sysmanage/partymember_addUI.action";
 			document.forms[0].submit();
@@ -57,13 +57,19 @@
 		
 		
 		function doEnsureDelete(id) {
-			document.forms[0].action = "${basePath}sysmanage/partymember_delete.action?partymember.id="+id;
-			document.forms[0].submit();
+			var option = window.confirm("您确定删除？");
+			if (option == true) {
+				document.forms[0].action = "${basePath}sysmanage/partymember_delete.action?partymember.id="+id;
+				document.forms[0].submit();
+			}
 		}
 		
 		function doDeleteAll() {
-			document.forms[0].action = "${basePath}sysmanage/partymember_deleteSelected.action";
-			document.forms[0].submit();
+			var option = window.confirm("您确定删除?");
+  			if (option == true) {
+				document.forms[0].action = "${basePath}sysmanage/partymember_deleteSelected.action";
+				document.forms[0].submit();
+			}
 		}
 		
 		function doExportExcel() {
@@ -149,7 +155,7 @@
                                 <td align="center"><s:property value="%{(classification=='TEACHER')?'老师':'学生'}"/></td>
                                 <td align="center">
                                     <a href="javascript:doEdit('<s:property value='id' />')">编辑</a>
-                                    <a href="javascript:doDelete('<s:property value='id' />')">删除</a>
+                                    <a href="javascript:doEnsureDelete('<s:property value='id' />')">删除</a>
                                 </td>
                             </tr>
                        </s:iterator>

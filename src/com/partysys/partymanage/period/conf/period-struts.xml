@@ -14,7 +14,7 @@
     			<param name="encode">true</param>
     			<param name="pageNo">${pageNo}</param>
     		</result>
-    		<!-- <interceptor-ref name="sumAuthStack" /> -->
+    		<interceptor-ref name="sumAuthStack" />
     	</action>
     </package>
 </struts>

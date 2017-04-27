@@ -5,6 +5,7 @@ import java.util.Set;
 import com.partysys.core.permission.PermissionCheck;
 import com.partysys.sysmanage.party.entity.Partymember;
 import com.partysys.sysmanage.party.entity.Rolepartymember;
+import com.partysys.sysmanage.role.entity.Roleprivilege;
 
 public class PermissionCheckImpl implements PermissionCheck{
 
@@ -17,9 +18,11 @@ public class PermissionCheckImpl implements PermissionCheck{
 				return false;
 			}
 			for (Rolepartymember rp : rolepartymembers) {
-				if (rp.getRole().getRoleName().contains(code)) {
-					//具有系统管理员权限就可以使用系统管理功能
-					return true;
+				//具有“xxx”这一权限的角色的人都可以使用xxx模块
+				for (Roleprivilege pri : rp.getRole().getRoleprivileges()) {
+					if (pri.getCode().equals(code)) {
+						return true;
+					}
 				}
 			}
 			return false;

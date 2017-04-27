@@ -23,13 +23,19 @@
   	}
   	//删除
   	function doDelete(id){
-  		document.forms[0].action = "${basePath}sysmanage/info_delete.action?info.infoId=" + id;
-  		document.forms[0].submit();
+  		var option = window.confirm("您确定删除?");
+  		if (option == true) {
+	  		document.forms[0].action = "${basePath}sysmanage/info_delete.action?info.infoId=" + id;
+	  		document.forms[0].submit();
+  		}
   	}
   	//批量删除
   	function doDeleteAll(){
-  		document.forms[0].action = "${basePath}sysmanage/info_deleteSelected.action";
-  		document.forms[0].submit();
+  		var option = window.confirm("您确定删除?");
+  		if (option == true) {
+	  		document.forms[0].action = "${basePath}sysmanage/info_deleteSelected.action";
+	  		document.forms[0].submit();
+  		}
   	}
   	var list_url = "${basePath}sysmanage/info_listUI.action";
   	function doSearch() {

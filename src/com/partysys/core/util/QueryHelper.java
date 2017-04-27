@@ -10,7 +10,7 @@ import java.util.List;
  * WHERE 条件1,...
  * ORDER By 
  * 
- * @author zhuxiaodong
+ * @author 朱可凡
  *
  */
 public class QueryHelper {

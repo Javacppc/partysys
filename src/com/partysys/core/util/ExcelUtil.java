@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import com.partysys.partymanage.deus.entity.Deus;
 import com.partysys.sysmanage.branch.entity.Branch;
 import com.partysys.sysmanage.branch.service.BranchService;
 import com.partysys.sysmanage.party.entity.Partymember;
@@ -318,5 +319,15 @@ public class ExcelUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
+	}
+	/**
+	 * 创建党费Excel表格
+	 * @param list
+	 * @param out
+	 */
+	public static void exportDeusExcelFor(List<Deus> list, ServletOutputStream out) {
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		CellRangeAddress address = new CellRangeAddress(0, 0, 0, 5);
+		
 	}
 }

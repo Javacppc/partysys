@@ -1,6 +1,10 @@
 package com.partysys.partymanage.period.action;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -11,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.partysys.core.action.BaseAction;
 import com.partysys.core.exception.ActionException;
+import com.partysys.core.permission.impl.PermissionCheckImpl;
+import com.partysys.core.util.ExcelUtil;
 import com.partysys.core.util.QueryHelper;
+import com.partysys.partymanage.deus.entity.Deus;
+import com.partysys.partymanage.deus.service.DeusService;
 import com.partysys.partymanage.period.entity.Period;
 import com.partysys.partymanage.period.service.PeriodService;
 import com.partysys.sysmanage.party.entity.Partymember;
+import com.partysys.sysmanage.party.service.PartymemberService;
 /**
  * 汇总党费Action
  * @author 朱可凡
@@ -23,6 +32,11 @@ import com.partysys.sysmanage.party.entity.Partymember;
 public class PeriodAction extends BaseAction{
 	@Autowired
 	private PeriodService periodService;
+	@Autowired
+	private PartymemberService partymemberService;
+	@Autowired
+	private DeusService deusService;
+	
 	/**
 	 * 接受从前台传递的period
 	 */
@@ -34,7 +48,7 @@ public class PeriodAction extends BaseAction{
 	 * @return
 	 * @throws Exception
 	 */
-	public String listUI() throws Exception{
+	public String listUI() throws Exception {
 		QueryHelper helper = new QueryHelper(Period.class, "p");
 		if (period != null) {
 			if (StringUtils.isNotBlank(period.getDate())) {
@@ -44,12 +58,12 @@ public class PeriodAction extends BaseAction{
 		}
 		Partymember pm = (Partymember) ServletActionContext.getContext().getSession().get("SYS_USER");
 		//若用户是学生汇总支部管理员，那么只显示学生创建的
-		if (pm.getClassification() != null) {
-			if (pm.getClassification().equals(Partymember.USER_STUDENT)) {
+		if (pm.getRolepartymembers() != null) {
+			if (new PermissionCheckImpl().isAccess(pm, "studentsumcash")) {
 				helper.addWhereClause("p.creator=?", Period.CREATOR_STUDENT);
 			}
 			//只显示教师创建的
-			else if (pm.getClassification().equals(Partymember.USER_TEACHER)) {
+			else if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
 				helper.addWhereClause("p.creator=?", Period.CREATOR_TEACHER);
 			}
 		}
@@ -66,15 +80,18 @@ public class PeriodAction extends BaseAction{
 			if (period != null) {
 				Partymember pm = (Partymember) ServletActionContext.getContext().getSession().get("SYS_USER");
 				//设置该期数是谁创建的（是老师还是学生?）
-				if (pm.getClassification() != null) {
-					if (pm.getClassification().equals(Partymember.USER_STUDENT)) {
+				if (pm.getRolepartymembers() != null) {
+					if (new PermissionCheckImpl().isAccess(pm, "studentsumcash")) 
+						//学生汇总书记在创建期数的时候就向党费表中插入数据{
 						period.setCreator(Period.CREATOR_STUDENT);
-					} else if (pm.getClassification().equals(Partymember.USER_TEACHER)) {
+						saveDeusAndPartymember(pm.getClassification());
+					} else if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
 						period.setCreator(Period.CREATOR_TEACHER);
+						//教师汇总书记在创建期数的时候就向党费表中插入数据
+						saveDeusAndPartymember(pm.getClassification());
 					}
 				}
 				periodService.save(period);
-			}
 			period = null;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,6 +99,29 @@ public class PeriodAction extends BaseAction{
 		}
 		return "list";
 	}
+	/**
+	 * 保存党费和党员
+	 * @param classification
+	 */
+	private void saveDeusAndPartymember(String classification) {
+		QueryHelper helper = new QueryHelper(Partymember.class, "p");
+		//只创建学生党员的信息
+		helper.addWhereClause("p.classification=?", classification);
+		List<Partymember> list = partymemberService.find(helper);
+		Set<Deus> deuses = new HashSet<>();
+		for (Partymember p : list) {
+			Deus deus = new Deus();
+			//设置党费和党员及期数的关联关系
+			deus.setPartymember(p);
+			deus.setPeriod(period);
+			deuses.add(deus);
+		}
+		//设置期数中的党费(即期数中有多少党费)
+		period.setDeus(deuses);
+		//设置期数中的党员(即期数中有多少党员)
+		period.setPartymembers(new HashSet<>(list));	
+	}
+	
 	/**
 	 * 编辑页面
 	 * @return
@@ -129,7 +169,14 @@ public class PeriodAction extends BaseAction{
 	 * @throws Exception
 	 */
 	public String delete() throws Exception{
-		
+		try {
+			if (period != null && period.getPeriodId() != null) {
+				periodService.delete(period.getPeriodId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ActionException("Action层出现问题，原因: " + e.getMessage());
+		}
 		return "list";
 	}
 	/**
@@ -138,14 +185,48 @@ public class PeriodAction extends BaseAction{
 	 * @throws Exception
 	 */
 	public String deleteSelected() throws Exception{
-		
+		try {
+			if (selectedRow != null) {
+				for (String id : selectedRow) {
+					periodService.delete(id);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ActionException("Action层出现异常,异常信息是: " + e.getMessage());
+		}
 		return "list";
 	}
 	/**
 	 * 导出党费缴纳清单汇总表
 	 */
-	public void exportExcel() {
-		
+	public void exportExcel() throws Exception{
+		try {
+			Partymember pm = (Partymember) ServletActionContext.getRequest().getSession().getAttribute("SYS_USER");
+			List<Deus> list = new ArrayList<>();
+			HttpServletResponse response = ServletActionContext.getResponse();
+			response.setContentType("application/x-excel");
+			response.setHeader("Content-Disposition", "attachment;filename=" + new String("数计学院学生党支部党费收缴单".getBytes(), "ISO-8859-1"));
+			ServletOutputStream out = response.getOutputStream();
+			if (new PermissionCheckImpl().isAccess(pm, "studentsumcash")) {
+				//导出学生党费
+				QueryHelper helper = new QueryHelper(Deus.class, "d");
+				helper.addWhereClause("d.partymember.classification=?", Partymember.USER_STUDENT);
+				list = deusService.find(helper);
+			} else if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
+				//导出教师党费
+				QueryHelper helper = new QueryHelper(Deus.class, "d");
+				helper.addWhereClause("d.partymember.classification=?", Partymember.USER_TEACHER);
+				list = deusService.find(helper);
+			}
+			ExcelUtil.exportDeusExcelFor(list, out);
+			if (out != null) {
+				out.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ActionException("Action层出现异常,异常信息是: " + e.getMessage());
+		}
 	}
 	public Period getPeriod() {
 		return period;
@@ -168,4 +249,11 @@ public class PeriodAction extends BaseAction{
 	public void setStrTitle(String strTitle) {
 		this.strTitle = strTitle;
 	}
+	public PartymemberService getPartymemberService() {
+		return partymemberService;
+	}
+	public void setPartymemberService(PartymemberService partymemberService) {
+		this.partymemberService = partymemberService;
+	}
+	
 }

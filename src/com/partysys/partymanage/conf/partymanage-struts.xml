@@ -8,10 +8,16 @@
 		<interceptors>
 			<!-- 定义党费汇总的拦截器 -->
 			<interceptor name="sumAuth" class="com.partysys.partymanage.period.interceptor.AuthInterceptor" />
-			<!-- 定义一个拦截器栈 -->
+			<interceptor name="deusAuth" class="com.partysys.partymanage.deus.interceptor.AuthInterceptor"></interceptor>
+			<!-- 为汇总党费定义一个拦截器栈 -->
 			<interceptor-stack name="sumAuthStack">
 				<interceptor-ref name="defaultStack" />
 				<interceptor-ref name="sumAuth" />
+			</interceptor-stack>
+			<!-- 为党费管理定义一个拦截器栈 -->
+			<interceptor-stack name="deusAuthStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="deusAuth" />
 			</interceptor-stack>
 		</interceptors>
 	</package>

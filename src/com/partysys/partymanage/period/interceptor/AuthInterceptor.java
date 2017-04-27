@@ -16,8 +16,8 @@ public class AuthInterceptor extends AbstractInterceptor{
 	public String intercept(ActionInvocation invocation) throws Exception {
 		Partymember pm = (Partymember) invocation.getInvocationContext().getSession().get("SYS_USER");
 		PermissionCheck pc = new PermissionCheckImpl();
-		if (pc.isAccess(pm, "汇总")) {
-			//只要有汇总党费的角色就可以访问系统
+		//若该角色拥有教师汇总党费，学生汇总党费，那么就可以访问系统
+		if (pc.isAccess(pm, "teachersumcash") || pc.isAccess(pm, "studentsumcash")) {
 			return invocation.invoke();
 		}
 		//跳转到没有权限访问页面
