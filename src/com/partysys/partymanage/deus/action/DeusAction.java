@@ -33,7 +33,7 @@ public class DeusAction extends BaseAction{
 	private Period period;
 	private String strTitle;
 	private Deus deus;
-	
+	private Partymember partymember;
 	
 	
 	/**
@@ -53,16 +53,25 @@ public class DeusAction extends BaseAction{
 			Partymember pm = (Partymember) ServletActionContext.getRequest().getSession().getAttribute("SYS_USER");
 			//如果管理员是学生支部书记那么就只能显示学生汇总支部书记创建的期数
 			//教师的亦是如此
+			//如果学生和教师都有，那么就全部显示
 			PermissionCheckImpl pc = new PermissionCheckImpl();
 			if (pc.isAccess(pm, "studentmanage") || pc.isAccess(pm, "studentsumcash")) {
-				helper.addWhereClause("p.creator", Period.CREATOR_STUDENT);
-			} else if (pc.isAccess(pm, "teachersumcash") || pc.isAccess(pm, "Tmanage")){
-				helper.addWhereClause("p.creator", Period.CREATOR_TEACHER);
+				helper.addInClause("p.creator IN (", Period.CREATOR_STUDENT, false);
+			}
+			if (pc.isAccess(pm, "teachersumcash") || pc.isAccess(pm, "Tmanage")){
+				helper.addInClause("p.creator IN (", Period.CREATOR_TEACHER, true);
+			}
+			if (!pc.isAccess(pm, "studentmanage") 
+					|| !pc.isAccess(pm, "studentsumcash")
+					|| !pc.isAccess(pm, "teachersumcash")
+					|| !pc.isAccess(pm, "Tmanage")) {
+				//若不具有支部书记的权限，直接返回空页面
+				return "listUI";
 			}
 			pageResult = periodService.findByPage(helper, getPageNo(), getPageSize());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ActionException("Action层出现异常");
+			throw new ActionException("Action层出现异常, 异常信息: " + e.getMessage());
 		}
 		return "listUI";
 	}
@@ -70,33 +79,56 @@ public class DeusAction extends BaseAction{
 	 * 录入党员交党费
 	 * @return
 	 */
+	//@SuppressWarnings("deprecation")
 	public String entryUI() throws Exception{
 		try {
 			//跳转到录入党费页面
 			Partymember pm = (Partymember) ServletActionContext.getRequest().getSession().getAttribute("SYS_USER");
-			QueryHelper helper = null;
 			if (period != null && period.getPeriodId() != null) {
 				//如果该角色没有汇总权限，那么只能显示其管理部分和称呼的列表
 				//例如普通数学支部书记只能录入数学支部和学生党员的信息
-				String type = pm.getClassification();
+				Period pd = periodService.findById(period.getPeriodId());
+				String type = pd.getCreator();
 				//只能录入该部门的党员
-				String branchName = pm.getBranch().getBranchName();
-				helper = new QueryHelper(Deus.class, "d");
-				helper.addWhereClause("d.period.periodId=?", period.getPeriodId());
-				if (type != null && branchName != null){
-					helper.addWhereClause("d.partymember.classification=?", type);
-					helper.addWhereClause("d.partymember.branch.branchName=?", branchName);
-				} else {
-					//若管理员信息不完整则不能显示数据
-					return "entryUI";
+				String branchName = null;
+				if (pm.getBranch() != null)
+					branchName = pm.getBranch().getBranchName();
+				QueryHelper helper = new QueryHelper(Deus.class, "d");
+				if (partymember != null && partymember.getName() != null) {
+					helper.addWhereClause("d.partymember.name=?", partymember.getName());
 				}
+				helper.addWhereClause("d.period.periodId=?", period.getPeriodId());
+				//String hql = "FROM (Deus d LEFT OUTER JOIN d.partymember pm WHERE pm.classification=? AND pm.branch.branchName=?) LEFT OUTER JOIN Period p WHERE p.periodId=?";
+				//String hql = "FROM (Deus d inner join d.partymember pm where pm.classification=?1 AND pm.branch.branchName=?2) inner join d.period pr where pr.periodId=?3";
+				if (new PermissionCheckImpl().isAccess(pm, "teachersumcash") 
+						&& new PermissionCheckImpl().isAccess(pm, "studentsumcash")) {
+					//-----------下面5句仅为测试-----------
+					/*if (Period.CREATOR_STUDENT.equals(type))
+						helper.addWhereClause("d.partymember.classification=?", Partymember.USER_STUDENT);
+					else 
+						helper.addWhereClause("d.partymember.classification=?", Partymember.USER_TEACHER);
+					helper.addWhereClause("d.partymember.branch.branchName=?", branchName);*/
+				} else {
+					if (type != null && branchName != null){
+						if (Period.CREATOR_STUDENT.equals(type))
+							helper.addWhereClause("d.partymember.classification=?", Partymember.USER_STUDENT);
+						else 
+							helper.addWhereClause("d.partymember.classification=?", Partymember.USER_TEACHER);
+						helper.addWhereClause("d.partymember.branch.branchName=?", branchName);
+						//pageResult = deusService.findByPage(hql, getPageNo(), getPageSize(), new Object[]{type, branchName, period.getPeriodId()});
+					} else {
+						//若管理员信息不完整则不能显示数据
+						return "entryUI";
+					}
+				}
+				pageResult = deusService.findByPage(helper, getPageNo(), getPageSize());
 			}
-			pageResult = deusService.findByPage(helper, getPageNo(), getPageSize());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ActionException("Action层出现异常,异常信息是: " + e.getMessage());
 		}
-		return "entryUI";
+		return "entry";
 	}
 	/**
 	 * 录入相应党员的党费
@@ -155,5 +187,10 @@ public class DeusAction extends BaseAction{
 	public void setDeus(Deus deus) {
 		this.deus = deus;
 	}
-	
+	public Partymember getPartymember() {
+		return partymember;
+	}
+	public void setPartymember(Partymember partymember) {
+		this.partymember = partymember;
+	}
 }

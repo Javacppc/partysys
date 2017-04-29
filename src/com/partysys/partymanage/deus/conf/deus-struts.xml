@@ -5,15 +5,16 @@
 
 <struts>
 
-    <package name="deus-action" extends="base-default" namespace="/partymanage">
+    <package name="deus-action" extends="partymanage-default" namespace="/partymanage">
     	<action name="deus_*" class="com.partysys.partymanage.deus.action.DeusAction" method="{1}">
     		<result name="{1}">/WEB-INF/jsp/partymanage/deus/{1}.jsp</result>
-    		<result name="list" type="redirectAction">
-    			<param name="actionName">deus_listUI</param>
-    			<param name="deus.title">${strTitle}</param>
+    		<result name="entry" type="redirectAction">
+    			<param name="actionName">deus_entryUI</param>
+    			<!-- <param name="deus.period.date">${strTitle}</param> -->
     			<param name="encode">true</param>
     			<param name="pageNo">${pageNo}</param>
-    		</result>		
+    		</result>
+    		<interceptor-ref name="deusAuthStack" />	
     	</action>
     </package>
 </struts>

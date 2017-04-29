@@ -67,7 +67,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
 	}
 
 	@Override
-	public List<T> findByPage(String hql, int pageNo, int pageSize, Object... params) {
+	public PageResult findByPage(String hql, int pageNo, int pageSize, Object... params) {
 		return baseDao.findByPage(hql, pageNo, pageSize,params);
 	}
 

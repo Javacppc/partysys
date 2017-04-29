@@ -142,7 +142,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> findByPage(String hql , int pageNo, int pageSize
+	public PageResult findByPage(String hql , int pageNo, int pageSize
 		, Object... params)
 	{
 		// 创建查询
@@ -153,10 +153,14 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 		{
 			query.setParameter(i + "" , params[i]);
 		}
+		if (pageNo < 1) pageNo = 1;
+		//总记录数
+		long totalCount = query.list().size();
 		// 执行分页，并返回查询结果
-		return query.setFirstResult((pageNo - 1) * pageSize)
+		List items = query.setFirstResult((pageNo - 1) * pageSize)
 			.setMaxResults(pageSize)
 			.list();
+		return new PageResult(totalCount, pageNo, pageSize, items);
 	}
 	@Override
 	public T findById(Serializable id) {
@@ -179,6 +183,7 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 	
 	@Override
 	public PageResult findByPage(QueryHelper helper, int pageNo, int pageSize) {
+		try {
 		Query query = getSessionFactory().getCurrentSession()
 				.createQuery(helper.getQueryListHql());
 		List<Object> objs = helper.getParameters();
@@ -201,6 +206,9 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
 		}
 		long totalCount = (long) queryCount.uniqueResult();
 		return new PageResult(totalCount,pageNo, pageSize, items);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-	
 }

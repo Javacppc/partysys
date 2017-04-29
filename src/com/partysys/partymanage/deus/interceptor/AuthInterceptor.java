@@ -8,7 +8,7 @@ import com.partysys.core.permission.impl.PermissionCheckImpl;
 import com.partysys.sysmanage.party.entity.Partymember;
 /**
  * 访问党费管理需要具有教师或学生党建管理权限
- * @author zhuxiaodong
+ * @author 朱可凡
  *
  */
 public class AuthInterceptor extends AbstractInterceptor{
@@ -17,12 +17,14 @@ public class AuthInterceptor extends AbstractInterceptor{
 	public String intercept(ActionInvocation invocation) throws Exception {
 		Partymember pm = (Partymember) invocation.getInvocationContext().getSession().get("SYS_USER");
 		PermissionCheck pc = new PermissionCheckImpl();
-		//若该角色拥有教师汇总党费，学生汇总党费，那么就可以访问系统
-		if (pc.isAccess(pm, "Tmanage") || pc.isAccess(pm, "studentmanage")) {
+		//若该角色拥有教师汇总(支部书记)党费，学生汇总(支部书记)党费权限，那么就可以访问系统
+		if (pc.isAccess(pm, "Tmanage") 
+				|| pc.isAccess(pm, "studentmanage") 
+				|| pc.isAccess(pm, "teachersumcash") 
+				|| pc.isAccess(pm, "studentsumcash")) {
 			return invocation.invoke();
 		}
 		//跳转到没有权限访问页面
 		return Action.LOGIN;
 	}
-
 }

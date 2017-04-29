@@ -29,6 +29,7 @@ import com.partysys.sysmanage.party.entity.Partymember;
 import com.partysys.sysmanage.party.entity.Rolepartymember;
 import com.partysys.sysmanage.party.entity.RolepartymemberId;
 import com.partysys.sysmanage.party.service.PartymemberService;
+import com.partysys.sysmanage.role.entity.Roleprivilege;
 import com.partysys.sysmanage.role.service.RoleService;
 
 public class PartymemberAction extends BaseAction implements InitializingBean{
@@ -211,10 +212,17 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 					//查找到党员所具备的所有角色
 					List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(partymember.getId());
 					//新增的党员信息必须是支部管理员，它才属于这个支部的管理员，所以下面要判断一下这个新增党员是否是支部管理员
-					for (Rolepartymember mem : roles) {
+					outer:for (Rolepartymember mem : roles) {
 						//如果用户具有支部相关角色则把该用户存放到Branch的BranchAdmin字段（因为只有支部管理员才是这个支部的管理员）
-						if (mem.getRole().getRoleName().contains("支部")) {
-							branch.getBranchAdmin().add(partymember.getName());
+						//if (mem.getRole().getRoleName().contains("支部")) {
+						for (Roleprivilege rp : mem.getRole().getRoleprivileges()) {
+							  if (rp.getCode().equals("Tmanage")
+									  || rp.getCode().equals("studentmanage")
+									  || rp.getCode().equals("teachersumcash")
+									  || rp.getCode().equals("studentsumcash")) {
+								branch.getBranchAdmin().add(partymember.getName());
+								break outer;
+							}
 						}
 					}
 					//更新支部表信息(添加完党员信息之后就需要修改支部信息---因为支部肯定人数会增加，以及可能会有新的管理员)
@@ -335,9 +343,10 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 					}
 					Branch branch = null;
 					//如果新添加的部门是空的话就不执行更新了
-					if (!nbranchId.equals("")) {
+					if (!"".equals(nbranchId)) {
 						//BUG FIXED IN 2017_4_11_21_44
 						branch = branchService.findById(nbranchId);
+						
 						//保存用户所属支部的关联关系(从表设置关联关系)
 						partymember.setBranch(branch);
 						//此时支部人数增加了
@@ -345,29 +354,46 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 						//查找到党员所具备的所有角色
 						List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(partymember.getId());
 						//新增的党员信息必须是支部管理员，它才属于这个支部的管理员，所以下面要判断一下这个新增党员是否是支部管理员
-						for (Rolepartymember mem : roles) {
+						outer:for (Rolepartymember mem : roles) {
 							//如果用户具有支部相关角色则把该用户存放到Branch的BranchAdmin字段（因为只有支部管理员才是这个支部的管理员）
-							if (mem.getRole().getRoleName().contains("支部")) {
-								/*//如果支部管理员列表里已经有这个人了，就不要再加了，否则就重复了!
-								if (!branch.getBranchAdmin().contains(partymember.getName()))	*/
-									branch.getBranchAdmin().add(partymember.getName());
+							for (Roleprivilege rp : mem.getRole().getRoleprivileges()) {
+								  if (rp.getCode().equals("Tmanage")
+										  || rp.getCode().equals("studentmanage")
+										  || rp.getCode().equals("teachersumcash")
+										  || rp.getCode().equals("studentsumcash")) {
+									  branch.getBranchAdmin().add(partymember.getName());
+									  //不执行这一条将会插入多条
+									  break outer;
+								  }
 							}
 						}
 						//更新支部表信息(添加完党员信息之后就需要修改支部信息---因为支部肯定人数会增加，以及可能会有新的管理员)
 						branchService.update(branch);
 					}
 				} else {
-					//部门不为空的话
-					if (!nbranchId.equals("") && !prebranchId.equals("")) {
+					//部门不为空的话(部门未改变)
+					if (!"".equals(nbranchId) && !"".equals(prebranchId)) {
 						Branch branch = branchService.findById(nbranchId);
+						//BUG FIXED IN 2017_4_29
+						//设置党员与支部的关联关系
+						Partymember id = partymemberService.findById(partymember.getId());
+						partymember.setBranch(branch);
+						branch.getPartymembers().remove(id);
+						branch.getPartymembers().add(partymember);
 						//角色
 						List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(partymember.getId());
 						//先删除原先的角色信息
 						branch.getBranchAdmin().remove(preusername.equals(partymember.getName())?partymember.getName():preusername);
 						//再添加新的信息
-						for (Rolepartymember mem : roles) {
-							if (mem.getRole().getRoleName().contains("支部")) {
-									branch.getBranchAdmin().add(partymember.getName());
+						outer:for (Rolepartymember mem : roles) {
+							for (Roleprivilege rp : mem.getRole().getRoleprivileges()) {
+								  if (rp.getCode().equals("Tmanage")
+										  || rp.getCode().equals("studentmanage")
+										  || rp.getCode().equals("teachersumcash")
+										  || rp.getCode().equals("studentsumcash")) {
+									  branch.getBranchAdmin().add(partymember.getName());
+									  break outer;
+								  }
 							}
 						}
 						branchService.update(branch);
@@ -389,6 +415,7 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 						}
 					}*/
 				}
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -413,7 +440,7 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 				 //删除支部信息
 				 if (pm.getBranch() != null) 
 					 deleteBranch(pm);
-				 System.out.println(partymember.getId());
+				 //System.out.println(partymember.getId());
 				 //删除党员以及党员对应的角色信息
 				 partymemberService.delete(partymember.getId());
 			 }
@@ -438,15 +465,19 @@ public class PartymemberAction extends BaseAction implements InitializingBean{
 		 //删除党员对应的支部信息
 		 //找到这个部门
 		 Branch branch = branchService.findById(pm.getBranch().getBranchId());
-		 System.out.println(branch.getBranchName());
 		 //在支部表中删除对应的党员
 	     branch.getPartymembers().remove(pm);
 		 List<Rolepartymember> roles = partymemberService.findUserRoleByUserId(pm.getId());
 		 //删除支部表对应的管理员信息（如果是支部管理员的话）
 		 for (Rolepartymember mem : roles) {
 			 //判断删除的这个用户是不是支部管理员
-		 	if (mem.getRole().getRoleName().contains("支部")) {
-				branch.getBranchAdmin().remove(pm.getName());//删除管理员信息
+			 for (Roleprivilege rp : mem.getRole().getRoleprivileges()) {
+				  if (rp.getCode().equals("Tmanage")
+						  || rp.getCode().equals("studentmanage")
+						  || rp.getCode().equals("teachersumcash")
+						  || rp.getCode().equals("studentsumcash")) {
+					  branch.getBranchAdmin().remove(pm.getName());//删除管理员信息
+				  }
 			 }
 		 }
 		 //BUG FIXED IN 2017_4_12 原因：又是忘记更新到数据库中

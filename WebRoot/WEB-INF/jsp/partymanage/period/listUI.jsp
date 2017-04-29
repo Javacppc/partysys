@@ -37,8 +37,6 @@
     	$("#periodEdit").focus(function() {
     		WdatePicker({'skin':'whyGreen', 'dateFmt':'yyyy-MM'});
     	});
-    })
-    $(function() {
     	$("#periodEdit1").focus(function() {
     		WdatePicker({'skin':'whyGreen', 'dateFmt':'yyyy-MM'});
     	});
@@ -68,7 +66,7 @@
   	}
   	//导出一个月所有支部的党费信息（包括汇总信息）
   	function doExport() {
-  		
+  		window.open("${basePath}partymanage/period_exportExcel.action");
   	}
   	//到后台验证是否有重名的期数(期数格式为yyyy-MM)
   	function onVerify() {
@@ -172,7 +170,7 @@
 			<label>确定删除该期数?</label>
 			<input hidden="hidden" class="myinp"/>
 		</p>
-		<p><input id="ensureDelete" type="button" value="确定" class="sub2" /></p> 
+		<p><input id="ensureDelete" type="button" value="确定" class="sub2" /><input hidden="hidden" class="sub2"/></p> 
 </div>
 <script type="text/javascript">
 	var myAlert = document.getElementById("alert"); 
@@ -252,7 +250,6 @@
 		document.body.appendChild(mybg);
 		document.body.style.overflow = "hidden";
 		$(function() {//页面加载成功后要做的事情
-			
 			$("#ensureDelete").click(function() {
 				doEnsureDelete(id);	//确定删除
 			});

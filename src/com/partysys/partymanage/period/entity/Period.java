@@ -71,7 +71,7 @@ public class Period {
 		this.date = date;
 	}
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "partymember_period", joinColumns = {
 			@JoinColumn(name = "period_id", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "partymember_id", nullable = false, updatable = false) })
@@ -83,7 +83,7 @@ public class Period {
 		this.partymembers = partymembers;
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "period")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "period")
 	public Set<Deus> getDeus() {
 		return deus;
 	}

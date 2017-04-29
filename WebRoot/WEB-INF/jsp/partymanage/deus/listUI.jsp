@@ -3,6 +3,7 @@
 <head>
     <%@include file="/common/header.jsp"%>
     <title>党费管理</title>
+    <script type="text/javascript" src="${basePath}js/datepicker/WdatePicker.js"></script>
     <script type="text/javascript">
 	var list_url = "${basePath}partymanage/deus_listUI.action";
   	function doSearch() {
@@ -33,10 +34,10 @@
                         </tr>
                        		<s:iterator value="pageResult.items" status="st">
                             <tr <s:if test="#st.odd">bgcolor="f8f8f8"</s:if> >
-                                <td align="center"><input type="hidden" name="selectedRow" value="<s:property value='periodId'/>"/></td>
+                                <%-- <td align="center"><input type="hidden" name="selectedRow" value="<s:property value='periodId'/>"/></td> --%>
                                 <td align="center"><s:property value="date"/></td>
                                 <td align="center">
-                                    <a href="${basePath}partymanage/deus_entryUI.action?periodId=<s:property value='periodId'/>">录入</a>
+                                    <a href="${basePath}partymanage/deus_entryUI.action?period.periodId=<s:property value='periodId'/>">录入</a>
                                 </td>
                             </tr>
                            </s:iterator>

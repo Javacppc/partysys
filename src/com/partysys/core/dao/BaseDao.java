@@ -82,7 +82,7 @@ public interface BaseDao<T>
 	 * @return
 	 */
 	@Deprecated
-	List<T> findByPage(String hql,
+	public List<T> findByPage(String hql,
 			 int pageNo, int pageSize);
 	/**
 	 * 分页查询(推荐使用带有QuertHelper参数的分页插查询)
@@ -93,7 +93,7 @@ public interface BaseDao<T>
 	 * @return
 	 */
 	@Deprecated
-	public List<T> findByPage(String hql , int pageNo, int pageSize
+	public PageResult findByPage(String hql , int pageNo, int pageSize
 			, Object... params);
 }
 

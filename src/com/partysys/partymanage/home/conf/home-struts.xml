@@ -2,13 +2,13 @@
 <!DOCTYPE struts PUBLIC
 	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
-
 <struts>
     <package name="partymanageHome-action" extends="partymanage-default" namespace="/partymanage">
     	<action name="home_*" class="com.partysys.partymanage.home.action.HomeAction" method="{1}">
     		<result name="{1}">/WEB-INF/jsp/partymanage/{1}.jsp</result>
     		<!-- 配置权限拦截器 -->
-    		<!-- <interceptor-ref name="sysAuthStack" /> -->
+    		<!-- 至少需要具备支部管理员权限 -->
+    		<interceptor-ref name="deusAuthStack" />
     	</action>
     </package>
 </struts>

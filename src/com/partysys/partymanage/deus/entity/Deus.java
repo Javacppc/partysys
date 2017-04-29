@@ -61,7 +61,7 @@ public class Deus {
 	public void setCost(double cost) {
 		this.cost = cost;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "partymember_id")
 	public Partymember getPartymember() {
 		return partymember;
@@ -70,7 +70,7 @@ public class Deus {
 	public void setPartymember(Partymember partymember) {
 		this.partymember = partymember;
 	}
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "period_id")
 	public Period getPeriod() {
 		return period;

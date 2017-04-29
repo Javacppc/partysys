@@ -4,7 +4,6 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-
     <package name="period-action" extends="partymanage-default" namespace="/partymanage">
     	<action name="period_*" class="com.partysys.partymanage.period.action.PeriodAction" method="{1}">
     		<result name="{1}">/WEB-INF/jsp/partymanage/period/{1}.jsp</result>

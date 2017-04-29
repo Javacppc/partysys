@@ -10,6 +10,7 @@ import javax.servlet.ServletOutputStream;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -325,9 +326,123 @@ public class ExcelUtil {
 	 * @param list
 	 * @param out
 	 */
-	public static void exportDeusExcelFor(List<Deus> list, ServletOutputStream out) {
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		CellRangeAddress address = new CellRangeAddress(0, 0, 0, 5);
-		
+	public static void exportDeusExcelFor(List<Deus> list, ServletOutputStream out, BranchService branchService) {
+		try {
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			CellRangeAddress address1 = new CellRangeAddress(0, 0, 0, 5);
+			CellRangeAddress address2 = new CellRangeAddress(1, 0, 1, 5);
+			
+			HSSFCellStyle style1 = createCellStyle(workbook, (short)14, false);
+			HSSFCellStyle style2 = createCellStyle(workbook, (short)11, false);
+			HSSFCellStyle style3 = createCellStyle(workbook, (short)11, true);
+			List<Branch> branches = branchService.findAll();
+			for (int i = 0; i < branches.size(); ++i) {
+				//支部名
+				String name = branches.get(i).getBranchName();
+				String branchName = name + "党支部";
+				//将本支部所有的党员信息放在一个集合中
+				List<Deus> listDeus = new ArrayList<>();
+				for (Deus d : list) {
+					if (d.getPartymember().getBranch().getBranchName().equals(name)) {
+						listDeus.add(d);
+					}
+				}
+				//添加合并单元格样式
+				HSSFSheet sheeti  = workbook.createSheet();
+				sheeti.setDefaultColumnWidth(15);
+				sheeti.setDefaultRowHeightInPoints(22);
+				/*sheeti.setColumnWidth(19, 30 * 256);
+				sheeti.setColumnWidth(2, 30 * 256);*/
+				sheeti.addMergedRegion(address1);
+				sheeti.addMergedRegion(address2);
+				CellRangeAddress address3 = new CellRangeAddress(listDeus.size() + 3, 0, listDeus.size() + 3, 5);
+				CellRangeAddress address4 = new CellRangeAddress(listDeus.size() + 4, 0, listDeus.size() + 4, 5);
+				
+				sheeti.addMergedRegion(address3);
+				sheeti.addMergedRegion(address4);
+				
+				workbook.setSheetName(i, branchName);
+				//创建头标题行
+				HSSFRow row = sheeti.createRow(0);
+				row.setHeight((short) (46 * 20));
+				HSSFCell cell = row.createCell(0);
+				cell.setCellStyle(style1);
+				SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月");
+				Date nowdate = format.parse(listDeus.get(0).getPeriod().getDate());
+				cell.setCellValue(new HSSFRichTextString("数计学院" + name + "党支部\r\n" + nowdate.toString() + "党费缴纳清单"));
+				
+				HSSFRow row1 = sheeti.createRow(1);
+				row1.setHeight((short) (30 * 20));
+				HSSFCell cell1 = row.createCell(0);
+				cell1.setCellStyle(style2);
+				cell1.setCellValue("二级单位党委（党总支）、直属党支部(盖章)：                     党支部名称："+ name +"学生党支部");
+				
+				String[] title = new String[]{"序号","姓名","性别","民族","党费(元)", "经办人"};
+				HSSFRow row2 = sheeti.createRow(2);
+				row2.setHeight((short)(29 * 20));
+				for (int j = 0; j < title.length; ++j) {
+					HSSFCell celli = row1.createCell(j);
+					celli.setCellStyle(style3);
+					celli.setCellValue(title[j]);
+				}
+				int k = 0;
+				//该支部有党费记录
+				if (listDeus != null) {
+					for (k = 0; k < listDeus.size(); ++k) {
+						HSSFRow rowi = sheeti.createRow(k + 3);
+						HSSFCell cellk0 = rowi.createCell(0);
+						cellk0.setCellStyle(style2);
+						cellk0.setCellValue(k + 1);
+						String pname = listDeus.get(i).getPartymember().getName();
+							HSSFCell cellk1 = rowi.createCell(1);
+							cellk1.setCellStyle(style2);
+							//设置缴纳党费人员姓名
+							if (pname != null) {
+							cellk1.setCellValue(pname);
+						}
+						//性别
+						HSSFCell cellk2 = rowi.createCell(2);
+						cellk2.setCellStyle(style2);
+						cellk2.setCellValue(listDeus.get(i).getPartymember().getGender()?"男":"女");
+						//民族
+						String nation = listDeus.get(i).getPartymember().getNation();
+							HSSFCell cellk3 = rowi.createCell(3);
+							cellk3.setCellStyle(style2);
+							if (nation != null) {
+							cellk3.setCellValue(nation);
+						}
+						//党费
+						HSSFCell cellk4 = rowi.createCell(4);
+						cellk4.setCellStyle(style2);
+						cellk4.setCellValue(listDeus.get(i).getCost());
+						//经办人
+						String manager = listDeus.get(i).getManager();
+							HSSFCell cellk5 = rowi.createCell(5);
+							cellk5.setCellStyle(style2);
+							if (manager != null) {
+								cellk5.setCellValue(manager);
+							}
+					}
+					
+				}
+				HSSFRow rowl = sheeti.createRow(k + 3);
+				HSSFCell cellla = row1.createCell(0);
+				cellla.setCellStyle(style2);
+				int psize = listDeus.size();//党员人数
+				double deussum = 0;
+				for (Deus d : listDeus) {
+					deussum += d.getCost();
+				}
+				cellla.setCellValue("合计：党员数:"+psize+"　     党费总额:"+deussum+"");
+				HSSFRow row2k = sheeti.createRow(k + 4);
+				HSSFCell cell2k = row2k.createCell(0);
+				cell2k.setCellStyle(style2);
+				cell2k.setCellValue(new HSSFRichTextString("党支部书记（签名）：\r\n缴款人（签名）："));
+			}
+			workbook.write(out);
+			workbook.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

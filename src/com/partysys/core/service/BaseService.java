@@ -77,7 +77,7 @@ public interface BaseService<T> {
 	 * @return
 	 */
 	@Deprecated
-	public List<T> findByPage(String hql , int pageNo, int pageSize
+	public PageResult findByPage(String hql , int pageNo, int pageSize
 			, Object... params);
 	/**
 	 * 分页查询（不推荐使用，推荐使用带QueryHelper参数的分页查询）

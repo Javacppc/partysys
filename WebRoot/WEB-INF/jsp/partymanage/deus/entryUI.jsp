@@ -4,16 +4,25 @@
     <%@include file="/common/header.jsp"%>
     <title>党费管理</title>
     <style type="text/css">
-    	#alert {border:1px solid #369;width:300px;height:100px;background:#e2ecf5;z-index:1000;position:absolute;display:none;} 
+    	#alert {border:1px solid #369;width:300px;height:200px;background:#e2ecf5;z-index:1000;position:absolute;display:none;} 
 		#alert h4 {height:20px;background:#369;color:#fff;padding:5px 0 0 5px;} 
 		#alert h4 span {float:left;} 
 		#alert h4 span#close {margin-left:220px;font-weight:500;cursor:pointer;} 
-		#alert p {padding:12px 0 0 30px;} 
-		#alert p input {width:120px;margin-left:20px;} 
-		#alert p input.myinp {border:1px solid #ccc;height:16px;} 
+		#alert table tr td p {padding:15px 0 0 30px;} 
+		#alert table tr td p input {width:120px;margin-left:20px;} 
+		#alert table tr td p input.myinp {border:1px solid #ccc;height:16px;} 
 		#alert p input.sub {width:60px;margin-left:33px;} 
 		#alert p input.sub2 {width:60px;margin-left:33px;} 
     </style>
+    <script type="text/javascript">
+    	var list_url = location.href;
+    	function doSearch() {
+	  		//每次点搜索按钮的时候都回到第一页（相当于重新查询）
+	  		$("#pageNo").val(1);
+	  		document.forms[0].action = list_url;
+	  		document.forms[0].submit();
+	  	}
+    </script>
 </head>
 <body class="rightBody">
 <form name="form1" action="" method="post">
@@ -21,6 +30,12 @@
         <div class="p_d_1_1">
             <div class="content_info">
                 <div class="c_crumbs"><div><b></b><strong>党费管理 </strong></div></div>
+                <div class="search_art">
+                    <li>
+                        姓名：<s:textfield name="partymember.name" cssClass="s_text" id="userName"  cssStyle="width:80px;"/>
+                    </li>
+                    <li><input type="button" class="s_button" value="搜 索" onclick="doSearch()"/></li>
+                </div>
                 <div class="t_list" style="margin:0px; border:0px none;">
                     <table width="100%" border="0">
                         <tr class="t_tit">
@@ -33,31 +48,32 @@
                         </tr>
                        		<s:iterator value="pageResult.items" status="st">
                             <tr <s:if test="#st.odd">bgcolor="f8f8f8"</s:if> >
-                                <td align="center"><input type="hidden" name="selectedRow" value="<s:property value='deusId'/>"/></td>
                                 <td align="center"><s:property value="partymember.name"/></td>
                                 <td align="center"><s:property value="%{partymember.gender==true?'男':'女'}"/></td>
                                 <td align="center"><s:property value="partymember.nation"/></td>
                                 <!-- 党费初始值每个人均为0 -->
-                                <td align="center"><s:property value="cost" value="0"/></td>
+                                <td align="center"><s:property value="cost" default="0"/></td>
                                 <td align="center"><s:property value="manager"/></td>
                                 <td align="center"><a href="javascript:doEntryIn('<s:property value='deusId'/>')">录入</a></td>
                             </tr>
                            </s:iterator>
                     </table>
                 </div>
+                <jsp:include page="/common/pageNavigator.jsp"/>
                 <div class="tc mt20">
        				 <input type="button"  onclick="javascript:history.go(-1)" class="btnB2" value="返回" />
     			</div>
             </div>
         </div>
     </div>
-    
 </form>
 <div id="alert">
 	<form name="entrydeus" method="post" action="${basePath}partymanage/deus_entry.action">
 		<h4><span>录入党费</span><span id="close">关闭</span></h4>
-		<p><label>缴纳党费:</label><input id="deusEdit" name="deus.cost" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>
-		<p><label>经办人:</label><input id="managerEdit" name="deus.manager" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p>    
+		<table>
+		<tr><td><p><label>党费:</label><input id="deusEdit" name="deus.cost" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p></td></tr>
+		<tr><td><p><label>经办人:</label><input id="managerEdit" name="deus.manager" type="text" class="myinp" onmouseover="this.style.border='1px solid #f60'" onfocus="this.style.border='1px solid #f60'" onblur="this.style.border='1px solid #ccc'" /></p></td></tr>    
+		</table>
 		<input id="hidedeusId" type="hidden" name="deus.deusId"/>
 		<p><input type="submit" value="录入" class="sub" /><input type="reset" value="重置" class="sub2" /></p> 
 	</form>

@@ -23,8 +23,8 @@
 	function delCookie() {
 		top.document.cookie = "TopNode=;expires=Fri, 31 Dec 1999 23:59:59 GMT;";
 	}
-	var v = 1;
-	alert(typeof v);
+	/* var v = 1;
+	alert(typeof v); */
 </script>
 </head>
 

@@ -475,7 +475,7 @@ public class Partymember implements java.io.Serializable {
 	}
 	
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "partymembers")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "partymembers")
 	public Set<Period> getPeriods() {
 		return periods;
 	}
@@ -485,7 +485,7 @@ public class Partymember implements java.io.Serializable {
 	}
 	
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "partymember")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "partymember")
 	public Set<Deus> getDeus() {
 		return deus;
 	}

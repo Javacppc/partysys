@@ -22,6 +22,7 @@ import com.partysys.partymanage.deus.entity.Deus;
 import com.partysys.partymanage.deus.service.DeusService;
 import com.partysys.partymanage.period.entity.Period;
 import com.partysys.partymanage.period.service.PeriodService;
+import com.partysys.sysmanage.branch.service.BranchService;
 import com.partysys.sysmanage.party.entity.Partymember;
 import com.partysys.sysmanage.party.service.PartymemberService;
 /**
@@ -36,6 +37,9 @@ public class PeriodAction extends BaseAction{
 	private PartymemberService partymemberService;
 	@Autowired
 	private DeusService deusService;
+	@Autowired
+	private BranchService branchService;
+	
 	
 	/**
 	 * 接受从前台传递的period
@@ -57,14 +61,14 @@ public class PeriodAction extends BaseAction{
 			}
 		}
 		Partymember pm = (Partymember) ServletActionContext.getContext().getSession().get("SYS_USER");
-		//若用户是学生汇总支部管理员，那么只显示学生创建的
 		if (pm.getRolepartymembers() != null) {
+			//若用户是学生汇总支部管理员，那么只显示学生创建的
 			if (new PermissionCheckImpl().isAccess(pm, "studentsumcash")) {
-				helper.addWhereClause("p.creator=?", Period.CREATOR_STUDENT);
+				helper.addInClause("p.creator IN (", Period.CREATOR_STUDENT, false);
 			}
 			//只显示教师创建的
-			else if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
-				helper.addWhereClause("p.creator=?", Period.CREATOR_TEACHER);
+			if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
+				helper.addInClause("p.creator IN (", Period.CREATOR_TEACHER, true);
 			}
 		}
 		pageResult = periodService.findByPage(helper, getPageNo(), getPageSize());
@@ -81,18 +85,24 @@ public class PeriodAction extends BaseAction{
 				Partymember pm = (Partymember) ServletActionContext.getContext().getSession().get("SYS_USER");
 				//设置该期数是谁创建的（是老师还是学生?）
 				if (pm.getRolepartymembers() != null) {
-					if (new PermissionCheckImpl().isAccess(pm, "studentsumcash")) 
+					if (new PermissionCheckImpl().isAccess(pm, "studentsumcash")) {
 						//学生汇总书记在创建期数的时候就向党费表中插入数据{
 						period.setCreator(Period.CREATOR_STUDENT);
-						saveDeusAndPartymember(pm.getClassification());
-					} else if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
+						saveDeusAndPartymember(period.getCreator());
+					}
+					if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
 						period.setCreator(Period.CREATOR_TEACHER);
 						//教师汇总书记在创建期数的时候就向党费表中插入数据
-						saveDeusAndPartymember(pm.getClassification());
+						saveDeusAndPartymember(period.getCreator());
+					}
+					if (!new PermissionCheckImpl().isAccess(pm, "studentsumcash") 
+							|| !new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
+						return "list";
 					}
 				}
 				periodService.save(period);
-			period = null;
+				period = null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ActionException("Action层出现异常,异常信息："+e.getMessage());
@@ -101,12 +111,16 @@ public class PeriodAction extends BaseAction{
 	}
 	/**
 	 * 保存党费和党员
-	 * @param classification
+	 * @param classification: 创建期数的人是学生汇总书记还是教师汇总书记
 	 */
 	private void saveDeusAndPartymember(String classification) {
 		QueryHelper helper = new QueryHelper(Partymember.class, "p");
-		//只创建学生党员的信息
-		helper.addWhereClause("p.classification=?", classification);
+		//若创建人是学生汇总党员，那么其针对的仅仅只是学生
+		if (Period.CREATOR_STUDENT.equals(classification))
+			helper.addWhereClause("p.classification=?", Partymember.USER_STUDENT);
+		else
+			//若创建人是教师汇总党员，那么其针对的仅仅只是教师
+			helper.addWhereClause("p.classification=?", Partymember.USER_TEACHER);
 		List<Partymember> list = partymemberService.find(helper);
 		Set<Deus> deuses = new HashSet<>();
 		for (Partymember p : list) {
@@ -131,7 +145,6 @@ public class PeriodAction extends BaseAction{
 		try {
 			if (period != null) {
 				Period myperiod = periodService.findById(period.getPeriodId());
-				System.out.println(period.getDate());
 				myperiod.setDate(period.getDate());
 				periodService.update(myperiod);
 			}
@@ -146,18 +159,18 @@ public class PeriodAction extends BaseAction{
 	 */
 	public void verify() throws Exception{
 		try {
-		if (period != null && period.getDate() != null) {
-			Period experiod = periodService.findPeriodByIdAndDate(period.getPeriodId(), period.getDate());
-			String strResult = "true";
-			if (experiod != null) {
-				strResult = "false";
+			if (period != null && period.getDate() != null) {
+				Period experiod = periodService.findPeriodByIdAndDate(period.getPeriodId(), period.getDate());
+				String strResult = "true";
+				if (experiod != null) {
+					strResult = "false";
+				}
+				HttpServletResponse response = ServletActionContext.getResponse();
+				response.setContentType("text/html");
+				ServletOutputStream output = response.getOutputStream();
+				output.write(strResult.getBytes());
+				output.close();
 			}
-			HttpServletResponse response = ServletActionContext.getResponse();
-			response.setContentType("text/html");
-			ServletOutputStream output = response.getOutputStream();
-			output.write(strResult.getBytes());
-			output.close();
-		}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ActionException("Action层异常发生,异常信息: " + e.getMessage());
@@ -213,13 +226,14 @@ public class PeriodAction extends BaseAction{
 				QueryHelper helper = new QueryHelper(Deus.class, "d");
 				helper.addWhereClause("d.partymember.classification=?", Partymember.USER_STUDENT);
 				list = deusService.find(helper);
-			} else if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
+			}
+			if (new PermissionCheckImpl().isAccess(pm, "teachersumcash")) {
 				//导出教师党费
 				QueryHelper helper = new QueryHelper(Deus.class, "d");
 				helper.addWhereClause("d.partymember.classification=?", Partymember.USER_TEACHER);
 				list = deusService.find(helper);
 			}
-			ExcelUtil.exportDeusExcelFor(list, out);
+			ExcelUtil.exportDeusExcelFor(list, out, branchService);
 			if (out != null) {
 				out.close();
 			}
@@ -255,5 +269,16 @@ public class PeriodAction extends BaseAction{
 	public void setPartymemberService(PartymemberService partymemberService) {
 		this.partymemberService = partymemberService;
 	}
-	
+	public DeusService getDeusService() {
+		return deusService;
+	}
+	public void setDeusService(DeusService deusService) {
+		this.deusService = deusService;
+	}
+	public BranchService getBranchService() {
+		return branchService;
+	}
+	public void setBranchService(BranchService branchService) {
+		this.branchService = branchService;
+	}
 }

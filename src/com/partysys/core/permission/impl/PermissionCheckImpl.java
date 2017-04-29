@@ -20,12 +20,13 @@ public class PermissionCheckImpl implements PermissionCheck{
 			for (Rolepartymember rp : rolepartymembers) {
 				//具有“xxx”这一权限的角色的人都可以使用xxx模块
 				for (Roleprivilege pri : rp.getRole().getRoleprivileges()) {
-					if (pri.getCode().equals(code)) {
+					if (code.equals(pri.getCode())) {
 						return true;
 					}
 				}
 			}
 			return false;
+			//return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("出现异常： " + e.getMessage());
